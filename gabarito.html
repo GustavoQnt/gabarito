@@ -813,6 +813,173 @@
 
   .btn-reset:hover { border-color: var(--text); color: var(--text); }
 
+  /* Histórico / Progresso */
+  .history-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    margin-top: 20px;
+  }
+
+  .history-card h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .history-empty {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: var(--bg);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .history-item:hover {
+    background: var(--accent-light);
+  }
+
+  .history-item .hi-info { flex: 1; min-width: 0; }
+  .history-item .hi-name { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .history-item .hi-meta { font-size: 0.78rem; color: var(--text-muted); }
+  .history-item .hi-score {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+  .history-item .hi-score.good { color: var(--green); }
+  .history-item .hi-score.ok { color: var(--yellow); }
+  .history-item .hi-score.bad { color: var(--red); }
+
+  .history-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+  }
+  .history-actions button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-ver-hist {
+    background: var(--text);
+    color: white;
+  }
+  .btn-ver-hist:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-limpar-hist {
+    background: var(--bg);
+    color: var(--text-muted);
+    border: 2px solid var(--border);
+  }
+  .btn-limpar-hist:hover { border-color: var(--red); color: var(--red); }
+
+  /* Modal histórico completo */
+  .history-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(45,42,38,0.4);
+    backdrop-filter: blur(6px);
+    z-index: 250;
+    overflow-y: auto;
+    padding: 40px 16px;
+  }
+  .history-overlay.visible {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+  .history-modal {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px 24px;
+    max-width: 460px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    animation: modalIn 0.4s ease;
+  }
+  .history-modal h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+  .history-modal .sub {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .history-full-list {
+    max-height: 360px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .history-full-item {
+    padding: 14px 16px;
+    background: var(--bg);
+    border-radius: 12px;
+    border-left: 4px solid transparent;
+  }
+  .history-full-item.best { border-left-color: var(--green); }
+  .history-full-item.improved { border-left-color: var(--blue); }
+  .history-full-item .hfi-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+  }
+  .history-full-item .hfi-name { font-weight: 600; }
+  .history-full-item .hfi-date { font-size: 0.8rem; color: var(--text-muted); }
+  .history-full-item .hfi-stats {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .history-full-item .hfi-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 6px;
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+  .history-full-item .hfi-badge.best { background: var(--green-light); color: var(--green); }
+  .history-full-item .hfi-badge.improved { background: var(--blue-light); color: var(--blue); }
+
   @media (max-width: 400px) {
     .q-opt { padding: 10px 0; font-size: 0.88rem; }
     header h1 { font-size: 1.7rem; }
@@ -845,6 +1012,17 @@
     <textarea id="gabInput" placeholder="A B C D A E B C D A..." oninput="parseGabarito()"></textarea>
     <div class="gabarito-preview" id="gabPreview"></div>
     <button class="btn-start" id="btnStart" disabled onclick="startQuiz()">Começar</button>
+  </div>
+
+  <!-- Histórico -->
+  <div class="history-card" id="historyCard">
+    <h2>📈 Seu progresso</h2>
+    <div class="history-empty" id="historyEmpty">Complete uma prova para ver seu histórico aqui</div>
+    <div class="history-list" id="historyPreview" style="display: none;"></div>
+    <div class="history-actions" id="historyActions" style="display: none;">
+      <button class="btn-ver-hist" onclick="openHistoryModal()">Ver histórico completo</button>
+      <button class="btn-limpar-hist" onclick="clearHistory()">Limpar histórico</button>
+    </div>
   </div>
 
   <!-- Quiz -->
@@ -953,11 +1131,23 @@
   </div>
 </div>
 
+<!-- Modal histórico completo -->
+<div class="history-overlay" id="historyOverlay">
+  <div class="history-modal">
+    <h2>📊 Seu histórico</h2>
+    <p class="sub">Compare seus resultados e veja como está evoluindo, Tete!</p>
+    <div class="history-full-list" id="historyFullList"></div>
+    <button class="btn-summary secondary" onclick="closeHistoryModal()" style="width: 100%;">Fechar</button>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast">Copiado!</div>
 
 <script>
   const letters = ['A','B','C','D','E'];
+  const STORAGE_KEY = 'gabarito_results';
+  const MAX_RESULTS = 50;
   let answerKey = [];
   let answered = {};
   let results = []; // {q, chosen, correct, status}
@@ -1035,6 +1225,117 @@
     const m = Math.floor(s / 60);
     const sec = s % 60;
     return sec > 0 ? `${m}m${sec}s` : `${m}m`;
+  }
+
+  // ---- LOCAL STORAGE / HISTÓRICO ----
+  function getSavedResults() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveResultToStorage(result) {
+    const list = getSavedResults();
+    list.unshift(result);
+    if (list.length > MAX_RESULTS) list.length = MAX_RESULTS;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  function formatHistoryDate(iso) {
+    const d = new Date(iso);
+    const now = new Date();
+    const diff = now - d;
+    if (diff < 60000) return 'Agora';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)} min atrás`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h atrás`;
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function loadHistoryPreview() {
+    const results = getSavedResults();
+    const empty = document.getElementById('historyEmpty');
+    const preview = document.getElementById('historyPreview');
+    const actions = document.getElementById('historyActions');
+
+    if (results.length === 0) {
+      empty.style.display = 'block';
+      preview.style.display = 'none';
+      actions.style.display = 'none';
+      return;
+    }
+
+    empty.style.display = 'none';
+    preview.style.display = 'flex';
+    actions.style.display = 'flex';
+    preview.innerHTML = '';
+
+    const toShow = results.slice(0, 5);
+    toShow.forEach(r => {
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.onclick = openHistoryModal;
+      const scoreClass = r.pct >= 70 ? 'good' : r.pct >= 50 ? 'ok' : 'bad';
+      item.innerHTML = `
+        <div class="hi-info">
+          <div class="hi-name">${r.examName || 'Prova sem nome'}</div>
+          <div class="hi-meta">${formatHistoryDate(r.date)} · ${formatTimeShort(r.timeSeconds)}</div>
+        </div>
+        <span class="hi-score ${scoreClass}">${r.pct}%</span>
+      `;
+      preview.appendChild(item);
+    });
+  }
+
+  function openHistoryModal() {
+    const results = getSavedResults();
+    const container = document.getElementById('historyFullList');
+    container.innerHTML = '';
+
+    if (results.length === 0) {
+      container.innerHTML = '<div class="history-empty">Nenhum resultado salvo ainda</div>';
+    } else {
+      const bestPct = Math.max(...results.map(r => r.pct));
+      results.forEach((r, i) => {
+        const prev = results[i + 1];
+        const isBest = r.pct === bestPct && r.pct > 0;
+        const improved = prev && r.pct > prev.pct;
+        let badge = '';
+        if (isBest && results.length > 1) badge = '🏆 Sua melhor!';
+        else if (improved) badge = `📈 +${r.pct - prev.pct}% em relação à anterior`;
+
+        const item = document.createElement('div');
+        item.className = 'history-full-item' + (isBest ? ' best' : improved ? ' improved' : '');
+        item.innerHTML = `
+          <div class="hfi-row">
+            <span class="hfi-name">${r.examName || 'Prova sem nome'}</span>
+            <span class="hfi-date">${formatHistoryDate(r.date)}</span>
+          </div>
+          <div class="hfi-stats">${r.correct}/${r.total} acertos · ${formatTimeShort(r.timeSeconds)}</div>
+          ${badge ? `<div class="hfi-badge ${isBest ? 'best' : 'improved'}">${badge}</div>` : ''}
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    document.getElementById('historyOverlay').classList.add('visible');
+  }
+
+  function closeHistoryModal() {
+    document.getElementById('historyOverlay').classList.remove('visible');
+  }
+
+  function clearHistory() {
+    if (confirm('Limpar todo o histórico? Não tem como desfazer.')) {
+      localStorage.removeItem(STORAGE_KEY);
+      loadHistoryPreview();
+      closeHistoryModal();
+      showToast('Histórico limpo');
+    }
   }
 
   // ---- START ----
@@ -1205,6 +1506,19 @@
     // Review list
     buildReviewList('all');
 
+    // Salvar no histórico
+    saveResultToStorage({
+      id: Date.now(),
+      date: new Date().toISOString(),
+      examName: examName || '',
+      total,
+      correct: correctCount,
+      wrong: wrongCount,
+      blanks,
+      pct,
+      timeSeconds: elapsedSeconds
+    });
+
     // Show
     document.getElementById('summaryOverlay').classList.add('visible');
     document.getElementById('scoreboard').classList.remove('visible');
@@ -1364,6 +1678,7 @@
     document.getElementById('quizSection').classList.remove('visible');
     document.getElementById('scoreboard').classList.remove('visible');
     document.getElementById('timerBar').classList.remove('visible');
+    loadHistoryPreview();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -1372,6 +1687,9 @@
     startQuiz();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // Carregar preview do histórico ao abrir a página
+  loadHistoryPreview();
 </script>
 
 </body>
