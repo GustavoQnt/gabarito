@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Biblioteca de Gabaritos - Confere Gabarito</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FBF9F7;
+            --card: #FFFFFF;
+            --text: #1A1A1A;
+            --text-muted: #6B7280;
+            --accent: #E8836B;
+            --accent-light: #FEF3F0;
+            --green: #4CAF82;
+            --green-light: #E8F5EC;
+            --blue: #6B8DE8;
+            --blue-light: #EEF2FD;
+            --red: #E86B6B;
+            --red-light: #FEF0F0;
+            --yellow: #F9A825;
+            --yellow-light: #FFF8E1;
+            --border: #E5E7EB;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0 30px;
+        }
+
+        header h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .library-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .library-card h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .library-empty {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px 20px;
+        }
+
+        .library-empty .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .library-empty p {
+            margin-bottom: 16px;
+        }
+
+        .library-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .lib-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg);
+            transition: all 0.2s;
+        }
+
+        .lib-item:hover {
+            border-color: var(--blue);
+        }
+
+        .lib-info {
+            flex: 1;
+        }
+
+        .lib-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .lib-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .lib-questions {
+            font-size: 0.75rem;
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .lib-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-use {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 8px;
+            background: var(--blue);
+            color: white;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-use:hover {
+            opacity: 0.9;
+        }
+
+        .btn-delete {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            background: var(--red-light);
+            color: var(--red);
+            font-family: inherit;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .btn-clear-all {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--red);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--red);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-clear-all:hover {
+            background: var(--red-light);
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, var(--blue-light) 0%, var(--card) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .stats-card .stat-value {
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--blue);
+        }
+
+        .stats-card .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .btn-go-main {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: var(--accent);
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-go-main:hover {
+            opacity: 0.95;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Voltar para Gabarito</a>
+
+        <header>
+            <h1>📚 Biblioteca de Gabaritos</h1>
+            <p>Gabaritos do ENEM salvos no seu dispositivo</p>
+        </header>
+
+        <div class="stats-card">
+            <div class="stat-value" id="totalCount">0</div>
+            <div class="stat-label">gabaritos salvos</div>
+        </div>
+
+        <div class="library-card">
+            <h2>💾 Gabaritos da API</h2>
+            <div id="libraryList">
+                <div class="library-empty">
+                    <div class="empty-icon">📭</div>
+                    <p>Nenhum gabarito salvo ainda</p>
+                    <a href="index.html" class="btn-go-main">Ir para o Gabarito</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const GABARITO_CACHE_KEY = 'enem_gabaritos_cache';
+
+        function getGabaritosFromStorage() {
+            try {
+                const raw = localStorage.getItem(GABARITO_CACHE_KEY);
+                return raw ? JSON.parse(raw) : {};
+            } catch {
+                return {};
+            }
+        }
+
+        function renderLibrary() {
+            const cache = getGabaritosFromStorage();
+            const entries = Object.entries(cache);
+            const container = document.getElementById('libraryList');
+            const countEl = document.getElementById('totalCount');
+
+            countEl.textContent = entries.length;
+
+            if (entries.length === 0) {
+                container.innerHTML = `
+          <div class="library-empty">
+            <div class="empty-icon">📭</div>
+            <p>Nenhum gabarito salvo ainda.<br>Acesse o Gabarito e carregue um ano do ENEM para salvar aqui.</p>
+            <a href="index.html" class="btn-go-main">Ir para o Gabarito</a>
+          </div>
+        `;
+                return;
+            }
+
+            // Ordenar por data de salvamento (mais recente primeiro)
+            entries.sort((a, b) => (b[1].savedAt || 0) - (a[1].savedAt || 0));
+
+            let html = '<div class="library-list">';
+
+            entries.forEach(([key, value]) => {
+                const [year, lang] = key.split('_');
+                const savedDate = value.savedAt ? new Date(value.savedAt).toLocaleDateString('pt-BR') : 'Data desconhecida';
+                const dia1Count = value.data?.dia1?.split(' ').filter(x => x).length || 0;
+                const dia2Count = value.data?.dia2?.split(' ').filter(x => x).length || 0;
+                const dia1Complete = dia1Count >= 90;
+                const dia2Complete = dia2Count >= 90;
+                const dia1Status = dia1Complete ? '✓' : '⚠️';
+                const dia2Status = dia2Complete ? '✓' : '⚠️';
+                const dia1Color = dia1Complete ? 'var(--green)' : 'var(--yellow)';
+                const dia2Color = dia2Complete ? 'var(--green)' : 'var(--yellow)';
+
+                html += `
+          <div class="lib-item">
+            <div class="lib-info">
+              <div class="lib-title">ENEM ${year}</div>
+              <div class="lib-meta">${lang === 'ingles' ? 'Inglês' : 'Espanhol'} • Salvo em ${savedDate}</div>
+              <div class="lib-questions">
+                <span style="color: ${dia1Color}">${dia1Status} Dia 1: ${dia1Count}/90</span> • 
+                <span style="color: ${dia2Color}">${dia2Status} Dia 2: ${dia2Count}/90</span>
+              </div>
+            </div>
+            <div class="lib-actions">
+              <button class="btn-use" onclick="useGabarito('${key}', 'dia1')">Usar Dia 1</button>
+              <button class="btn-use" onclick="useGabarito('${key}', 'dia2')">Usar Dia 2</button>
+              <button class="btn-delete" onclick="deleteGabarito('${key}')">🗑 Remover</button>
+            </div>
+          </div>
+        `;
+            });
+
+            html += '</div>';
+            html += '<button class="btn-clear-all" onclick="clearAll()">Limpar todos os gabaritos</button>';
+
+            container.innerHTML = html;
+        }
+
+        function useGabarito(cacheKey, day) {
+            // Redirecionar para index.html com parâmetros
+            const url = `index.html?loadCache=${encodeURIComponent(cacheKey)}&day=${day}`;
+            window.location.href = url;
+        }
+
+        function deleteGabarito(cacheKey) {
+            if (!confirm('Remover este gabarito?')) return;
+
+            const cache = getGabaritosFromStorage();
+            delete cache[cacheKey];
+            localStorage.setItem(GABARITO_CACHE_KEY, JSON.stringify(cache));
+            renderLibrary();
+        }
+
+        function clearAll() {
+            if (!confirm('Limpar TODOS os gabaritos salvos?')) return;
+            localStorage.removeItem(GABARITO_CACHE_KEY);
+            renderLibrary();
+        }
+
+        // Inicializar
+        renderLibrary();
+    </script>
+</body>
+
+</html>

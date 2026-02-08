@@ -1,1696 +1,3687 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Confere Gabarito ✓</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #FDF6F0;
-    --card: #FFFFFF;
-    --accent: #E8836B;
-    --accent-light: #FFF0EC;
-    --green: #4CAF82;
-    --green-light: #E8F5E9;
-    --red: #E25C5C;
-    --red-light: #FDEAEA;
-    --blue: #6B8DE8;
-    --blue-light: #EEF2FD;
-    --yellow: #F9A825;
-    --yellow-light: #FFF8E1;
-    --text: #2D2A26;
-    --text-muted: #8A847D;
-    --border: #E8E2DB;
-    --shadow: 0 2px 12px rgba(45,42,38,0.06);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 24px 16px 130px;
-  }
-
-  .container { max-width: 480px; margin: 0 auto; }
-
-  header { text-align: center; padding: 28px 0 24px; }
-
-  header h1 {
-    font-family: 'Fraunces', serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 6px;
-  }
-
-  header p {
-    color: var(--text-muted);
-    font-size: 0.92rem;
-    line-height: 1.5;
-  }
-
-  /* Cards */
-  .step-card {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: var(--shadow);
-    margin-bottom: 20px;
-  }
-
-  .step-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .step-num {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: white;
-    font-size: 0.8rem;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .step-label h2 { font-size: 1rem; font-weight: 600; }
-
-  .step-description {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-bottom: 14px;
-    line-height: 1.5;
-  }
-
-  textarea {
-    width: 100%;
-    padding: 14px 16px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-family: 'DM Sans', monospace;
-    font-size: 1.05rem;
-    color: var(--text);
-    background: var(--bg);
-    resize: vertical;
-    min-height: 80px;
-    outline: none;
-    transition: border-color 0.2s;
-    letter-spacing: 1.5px;
-  }
-
-  textarea:focus { border-color: var(--accent); }
-
-  textarea::placeholder {
-    color: #C4BDB5;
-    letter-spacing: 0.5px;
-    font-size: 0.9rem;
-  }
-
-  /* Name input */
-  .name-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .name-row input {
-    flex: 1;
-    padding: 12px 14px;
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 0.95rem;
-    color: var(--text);
-    background: var(--bg);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .name-row input:focus { border-color: var(--accent); }
-  .name-row input::placeholder { color: #C4BDB5; }
-
-  /* Preview chips */
-  .gabarito-preview {
-    margin-top: 14px;
-    display: none;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .gabarito-preview.visible { display: flex; }
-
-  .gab-chip {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--blue-light);
-    color: var(--blue);
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 600;
-  }
-
-  .gab-chip .gab-num { color: #99A8C9; font-weight: 500; }
-
-  .btn-start {
-    width: 100%;
-    margin-top: 16px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-start:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(232,131,107,0.35);
-  }
-
-  .btn-start:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-
-  /* Timer bar */
-  .timer-bar {
-    display: none;
-    background: var(--card);
-    border-radius: 12px;
-    padding: 10px 18px;
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .timer-bar.visible { display: flex; }
-
-  .timer-bar .timer-icon { font-size: 1.1rem; }
-
-  .timer-bar .timer-value {
-    font-family: 'Fraunces', serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: 1px;
-  }
-
-  .timer-bar .timer-label {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 500;
-  }
-
-  /* Quiz */
-  .quiz-section { display: none; }
-
-  .quiz-section.visible {
-    display: block;
-    animation: fadeUp 0.4s ease;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes popIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-  }
-
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
-  }
-
-  .question-card {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 18px 20px;
-    box-shadow: var(--shadow);
-    margin-bottom: 12px;
-    transition: all 0.3s ease;
-    border-left: 4px solid transparent;
-  }
-
-  .question-card.answered-correct {
-    border-left-color: var(--green);
-    background: linear-gradient(135deg, var(--green-light) 0%, var(--card) 40%);
-    animation: popIn 0.3s ease;
-  }
-
-  .question-card.answered-wrong {
-    border-left-color: var(--red);
-    background: linear-gradient(135deg, var(--red-light) 0%, var(--card) 40%);
-    animation: shake 0.35s ease;
-  }
-
-  .q-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  .q-number {
-    font-family: 'Fraunces', serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-  }
-
-  .q-feedback {
-    font-size: 0.82rem;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
-    display: none;
-  }
-
-  .q-feedback.show { display: inline-block; }
-  .q-feedback.correct { background: var(--green-light); color: var(--green); }
-  .q-feedback.wrong { background: var(--red-light); color: var(--red); }
-
-  .q-options { display: flex; gap: 8px; }
-
-  .q-opt {
-    flex: 1;
-    padding: 12px 0;
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    background: white;
-    font-family: inherit;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
-  }
-
-  .q-opt:hover:not(.locked) {
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: translateY(-1px);
-  }
-
-  .q-opt.locked { cursor: default; }
-
-  .q-opt.selected-correct {
-    background: var(--green);
-    border-color: var(--green);
-    color: white;
-  }
-
-  .q-opt.selected-wrong {
-    background: var(--red);
-    border-color: var(--red);
-    color: white;
-  }
-
-  .q-opt.reveal-correct {
-    border-color: var(--green);
-    color: var(--green);
-    background: var(--green-light);
-    font-weight: 700;
-  }
-
-  /* Edit link */
-  .edit-link { text-align: center; margin-bottom: 16px; }
-
-  .edit-link a {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-
-  .edit-link a:hover { color: var(--accent); }
-
-  /* ======= SUMMARY ======= */
-  .summary-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(45,42,38,0.4);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    z-index: 200;
-    overflow-y: auto;
-    padding: 40px 16px;
-  }
-
-  .summary-overlay.visible {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    animation: fadeIn 0.3s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .summary-modal {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 32px 24px;
-    max-width: 460px;
-    width: 100%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-    animation: modalIn 0.4s ease;
-  }
-
-  @keyframes modalIn {
-    from { opacity: 0; transform: translateY(30px) scale(0.96); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  .summary-header {
-    text-align: center;
-    margin-bottom: 28px;
-  }
-
-  .summary-header h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-
-  .summary-header p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-  }
-
-  /* Big score */
-  .big-score {
-    text-align: center;
-    margin-bottom: 28px;
-  }
-
-  .big-score-circle {
-    width: 130px; height: 130px;
-    border-radius: 50%;
-    margin: 0 auto 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .big-score-circle .pct {
-    font-family: 'Fraunces', serif;
-    font-size: 2.8rem;
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  .big-score-circle .pct-sign {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-
-  .big-score-circle .pct-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    margin-top: 2px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .score-great .big-score-circle { background: var(--green-light); }
-  .score-great .pct { color: var(--green); }
-  .score-ok .big-score-circle { background: var(--yellow-light); }
-  .score-ok .pct { color: var(--yellow); }
-  .score-bad .big-score-circle { background: var(--red-light); }
-  .score-bad .pct { color: var(--red); }
-
-  .big-score .message {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 1.05rem;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
-
-  /* Stats grid */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-
-  .stat-box {
-    background: var(--bg);
-    border-radius: 12px;
-    padding: 14px 10px;
-    text-align: center;
-  }
-
-  .stat-box .stat-val {
-    font-family: 'Fraunces', serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-
-  .stat-box .stat-lbl {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    margin-top: 2px;
-  }
-
-  .stat-box.st-correct .stat-val { color: var(--green); }
-  .stat-box.st-wrong .stat-val { color: var(--red); }
-  .stat-box.st-time .stat-val { color: var(--blue); }
-
-  /* Visual bar */
-  .visual-bar {
-    margin-bottom: 24px;
-  }
-
-  .visual-bar-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    margin-bottom: 8px;
-  }
-
-  .bar-track {
-    height: 28px;
-    border-radius: 14px;
-    background: var(--bg);
-    display: flex;
-    overflow: hidden;
-  }
-
-  .bar-segment-correct {
-    background: var(--green);
-    height: 100%;
-    transition: width 0.6s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.72rem;
-    font-weight: 700;
-    min-width: 0;
-    overflow: hidden;
-  }
-
-  .bar-segment-wrong {
-    background: var(--red);
-    height: 100%;
-    transition: width 0.6s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.72rem;
-    font-weight: 700;
-    min-width: 0;
-    overflow: hidden;
-  }
-
-  .bar-segment-blank {
-    background: var(--border);
-    height: 100%;
-    transition: width 0.6s ease;
-    flex: 1;
-  }
-
-  /* Question review list */
-  .review-section {
-    margin-bottom: 24px;
-  }
-
-  .review-title {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    margin-bottom: 10px;
-  }
-
-  .review-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-
-  .review-tab {
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: var(--bg);
-    color: var(--text-muted);
-  }
-
-  .review-tab.active {
-    background: var(--text);
-    color: white;
-  }
-
-  .review-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-height: 220px;
-    overflow-y: auto;
-  }
-
-  .review-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    background: var(--bg);
-    border-radius: 10px;
-    font-size: 0.88rem;
-  }
-
-  .review-item .ri-num {
-    font-weight: 700;
-    width: 22px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-
-  .review-item .ri-detail {
-    flex: 1;
-    color: var(--text-muted);
-    font-size: 0.82rem;
-  }
-
-  .review-item .ri-badge {
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .review-item.ri-correct .ri-num { color: var(--green); }
-  .review-item.ri-correct .ri-badge { background: var(--green-light); color: var(--green); }
-  .review-item.ri-wrong .ri-num { color: var(--red); }
-  .review-item.ri-wrong .ri-badge { background: var(--red-light); color: var(--red); }
-  .review-item.ri-blank .ri-num { color: var(--text-muted); }
-  .review-item.ri-blank .ri-badge { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
-
-  /* Actions */
-  .summary-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 8px;
-  }
-
-  .btn-summary {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-  }
-
-  .btn-summary:hover { transform: translateY(-1px); }
-
-  .btn-summary.primary {
-    background: var(--accent);
-    color: white;
-    box-shadow: 0 4px 14px rgba(232,131,107,0.25);
-  }
-
-  .btn-summary.secondary {
-    background: var(--bg);
-    color: var(--text);
-    border: 2px solid var(--border);
-  }
-
-  .btn-summary.tertiary {
-    background: none;
-    color: var(--text-muted);
-    font-weight: 600;
-    font-size: 0.85rem;
-    padding: 10px;
-  }
-
-  /* Scoreboard */
-  .scoreboard {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: white;
-    border-top: 1px solid var(--border);
-    padding: 12px 20px;
-    display: none;
-    z-index: 100;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
-  }
-
-  .scoreboard.visible {
-    display: block;
-    animation: slideUp 0.4s ease;
-  }
-
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-
-  .scoreboard-inner {
-    max-width: 480px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .score-stats { display: flex; gap: 20px; }
-
-  .score-stat { text-align: center; }
-
-  .score-stat .val {
-    font-size: 1.3rem;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-
-  .score-stat .lbl {
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    color: var(--text-muted);
-  }
-
-  .score-stat.s-correct .val { color: var(--green); }
-  .score-stat.s-wrong .val { color: var(--red); }
-  .score-stat.s-remaining .val { color: var(--text-muted); }
-
-  .progress-ring {
-    width: 52px; height: 52px;
-    position: relative;
-  }
-
-  .progress-ring svg {
-    transform: rotate(-90deg);
-    width: 52px; height: 52px;
-  }
-
-  .progress-ring .ring-bg {
-    fill: none; stroke: var(--border); stroke-width: 4;
-  }
-
-  .progress-ring .ring-fill {
-    fill: none; stroke: var(--green); stroke-width: 4;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 0.4s ease;
-  }
-
-  .progress-ring .ring-pct {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; font-weight: 700; color: var(--text);
-  }
-
-  /* Confetti */
-  .confetti-piece {
-    position: fixed;
-    width: 8px; height: 8px;
-    border-radius: 2px;
-    z-index: 300;
-    pointer-events: none;
-    animation: confettiFall 2.5s ease-out forwards;
-  }
-
-  @keyframes confettiFall {
-    0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
-    100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(0.3); }
-  }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 90px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--text);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    z-index: 300;
-    opacity: 0;
-    transition: all 0.3s ease;
-    pointer-events: none;
-  }
-
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  /* Reset */
-  .reset-section {
-    text-align: center;
-    margin-top: 8px;
-    padding-bottom: 20px;
-    display: none;
-  }
-
-  .reset-section.visible { display: block; }
-
-  .btn-reset {
-    background: none;
-    border: 2px solid var(--border);
-    padding: 12px 32px;
-    border-radius: 50px;
-    font-family: inherit;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-reset:hover { border-color: var(--text); color: var(--text); }
-
-  /* Histórico / Progresso */
-  .history-card {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: var(--shadow);
-    margin-top: 20px;
-  }
-
-  .history-card h2 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .history-empty {
-    text-align: center;
-    padding: 24px 16px;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-
-  .history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .history-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 14px;
-    background: var(--bg);
-    border-radius: 12px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .history-item:hover {
-    background: var(--accent-light);
-  }
-
-  .history-item .hi-info { flex: 1; min-width: 0; }
-  .history-item .hi-name { font-weight: 600; color: var(--text); margin-bottom: 2px; }
-  .history-item .hi-meta { font-size: 0.78rem; color: var(--text-muted); }
-  .history-item .hi-score {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    flex-shrink: 0;
-    margin-left: 12px;
-  }
-  .history-item .hi-score.good { color: var(--green); }
-  .history-item .hi-score.ok { color: var(--yellow); }
-  .history-item .hi-score.bad { color: var(--red); }
-
-  .history-actions {
-    margin-top: 14px;
-    display: flex;
-    gap: 10px;
-  }
-  .history-actions button {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-  }
-  .btn-ver-hist {
-    background: var(--text);
-    color: white;
-  }
-  .btn-ver-hist:hover { opacity: 0.9; transform: translateY(-1px); }
-  .btn-limpar-hist {
-    background: var(--bg);
-    color: var(--text-muted);
-    border: 2px solid var(--border);
-  }
-  .btn-limpar-hist:hover { border-color: var(--red); color: var(--red); }
-
-  /* Modal histórico completo */
-  .history-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(45,42,38,0.4);
-    backdrop-filter: blur(6px);
-    z-index: 250;
-    overflow-y: auto;
-    padding: 40px 16px;
-  }
-  .history-overlay.visible {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    animation: fadeIn 0.3s ease;
-  }
-  .history-modal {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 28px 24px;
-    max-width: 460px;
-    width: 100%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-    animation: modalIn 0.4s ease;
-  }
-  .history-modal h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.4rem;
-    margin-bottom: 8px;
-  }
-  .history-modal .sub {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-  }
-  .history-full-list {
-    max-height: 360px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .history-full-item {
-    padding: 14px 16px;
-    background: var(--bg);
-    border-radius: 12px;
-    border-left: 4px solid transparent;
-  }
-  .history-full-item.best { border-left-color: var(--green); }
-  .history-full-item.improved { border-left-color: var(--blue); }
-  .history-full-item .hfi-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 4px;
-  }
-  .history-full-item .hfi-name { font-weight: 600; }
-  .history-full-item .hfi-date { font-size: 0.8rem; color: var(--text-muted); }
-  .history-full-item .hfi-stats {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .history-full-item .hfi-badge {
-    font-size: 0.75rem;
-    font-weight: 700;
-    margin-top: 6px;
-    padding: 2px 10px;
-    border-radius: 20px;
-  }
-  .history-full-item .hfi-badge.best { background: var(--green-light); color: var(--green); }
-  .history-full-item .hfi-badge.improved { background: var(--blue-light); color: var(--blue); }
-
-  @media (max-width: 400px) {
-    .q-opt { padding: 10px 0; font-size: 0.88rem; }
-    header h1 { font-size: 1.7rem; }
-    .summary-modal { padding: 24px 18px; }
-    .stats-grid { gap: 8px; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confere Gabarito ✓</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,wght@0,600;0,700;1,600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FDF6F0;
+      --card: #FFFFFF;
+      --accent: #E8836B;
+      --accent-light: #FFF0EC;
+      --green: #4CAF82;
+      --green-light: #E8F5E9;
+      --red: #E25C5C;
+      --red-light: #FDEAEA;
+      --blue: #6B8DE8;
+      --blue-light: #EEF2FD;
+      --yellow: #F9A825;
+      --yellow-light: #FFF8E1;
+      --text: #2D2A26;
+      --text-muted: #8A847D;
+      --border: #E8E2DB;
+      --shadow: 0 2px 12px rgba(45, 42, 38, 0.06);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 130px;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 28px 0 24px;
+    }
+
+    header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    /* Cards */
+    .step-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .step-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-label h2 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .step-description {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-family: 'DM Sans', monospace;
+      font-size: 1.05rem;
+      color: var(--text);
+      background: var(--bg);
+      resize: vertical;
+      min-height: 80px;
+      outline: none;
+      transition: border-color 0.2s;
+      letter-spacing: 1.5px;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+    }
+
+    textarea::placeholder {
+      color: #C4BDB5;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+    }
+
+    /* Name input */
+    .name-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .name-row input {
+      flex: 1;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .name-row input:focus {
+      border-color: var(--accent);
+    }
+
+    .name-row input::placeholder {
+      color: #C4BDB5;
+    }
+
+    /* Preview chips */
+    .gabarito-preview {
+      margin-top: 14px;
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .gabarito-preview.visible {
+      display: flex;
+    }
+
+    .gab-chip {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .gab-chip .gab-num {
+      color: #99A8C9;
+      font-weight: 500;
+    }
+
+    .btn-start {
+      width: 100%;
+      margin-top: 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-start:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(232, 131, 107, 0.35);
+    }
+
+    .btn-start:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Timer bar */
+    .timer-bar {
+      display: none;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 10px 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .timer-bar.visible {
+      display: flex;
+    }
+
+    .timer-bar .timer-icon {
+      font-size: 1.1rem;
+    }
+
+    .timer-bar .timer-value {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 1px;
+    }
+
+    .timer-bar .timer-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Quiz */
+    .quiz-section {
+      display: none;
+    }
+
+    .quiz-section.visible {
+      display: block;
+      animation: fadeUp 0.4s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-4px);
+      }
+
+      75% {
+        transform: translateX(4px);
+      }
+    }
+
+    .question-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+
+    .question-card.answered-correct {
+      border-left-color: var(--green);
+      background: linear-gradient(135deg, var(--green-light) 0%, var(--card) 40%);
+      animation: popIn 0.3s ease;
+    }
+
+    .question-card.answered-wrong {
+      border-left-color: var(--red);
+      background: linear-gradient(135deg, var(--red-light) 0%, var(--card) 40%);
+      animation: shake 0.35s ease;
+    }
+
+    .q-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .q-number {
+      font-family: 'Fraunces', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .q-feedback {
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: none;
+    }
+
+    .q-feedback.show {
+      display: inline-block;
+    }
+
+    .q-feedback.correct {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .q-feedback.wrong {
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    .q-options {
+      display: flex;
+      gap: 8px;
+    }
+
+    .q-opt {
+      flex: 1;
+      padding: 12px 0;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+
+    .q-opt:hover:not(.locked) {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .q-opt.locked {
+      cursor: default;
+    }
+
+    .q-opt.selected-correct {
+      background: var(--green);
+      border-color: var(--green);
+      color: white;
+    }
+
+    .q-opt.selected-wrong {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+    }
+
+    .q-opt.reveal-correct {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-light);
+      font-weight: 700;
+    }
+
+    /* Edit link */
+    .edit-link {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .edit-link a {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .edit-link a:hover {
+      color: var(--accent);
+    }
+
+    /* ======= SUMMARY ======= */
+    .summary-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(45, 42, 38, 0.4);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 40px 16px;
+    }
+
+    .summary-overlay.visible {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .summary-modal {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 32px 24px;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      animation: modalIn 0.4s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .summary-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .summary-header h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .summary-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Big score */
+    .big-score {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .big-score-circle {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .big-score-circle .pct {
+      font-family: 'Fraunces', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .big-score-circle .pct-sign {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .big-score-circle .pct-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .score-great .big-score-circle {
+      background: var(--green-light);
+    }
+
+    .score-great .pct {
+      color: var(--green);
+    }
+
+    .score-ok .big-score-circle {
+      background: var(--yellow-light);
+    }
+
+    .score-ok .pct {
+      color: var(--yellow);
+    }
+
+    .score-bad .big-score-circle {
+      background: var(--red-light);
+    }
+
+    .score-bad .pct {
+      color: var(--red);
+    }
+
+    .big-score .message {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .stat-box {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .stat-box .stat-val {
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .stat-box .stat-lbl {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-top: 2px;
+    }
+
+    .stat-box.st-correct .stat-val {
+      color: var(--green);
+    }
+
+    .stat-box.st-wrong .stat-val {
+      color: var(--red);
+    }
+
+    .stat-box.st-time .stat-val {
+      color: var(--blue);
+    }
+
+    /* Visual bar */
+    .visual-bar {
+      margin-bottom: 24px;
+    }
+
+    .visual-bar-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 8px;
+    }
+
+    .bar-track {
+      height: 28px;
+      border-radius: 14px;
+      background: var(--bg);
+      display: flex;
+      overflow: hidden;
+    }
+
+    .bar-segment-correct {
+      background: var(--green);
+      height: 100%;
+      transition: width 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .bar-segment-wrong {
+      background: var(--red);
+      height: 100%;
+      transition: width 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .bar-segment-blank {
+      background: var(--border);
+      height: 100%;
+      transition: width 0.6s ease;
+      flex: 1;
+    }
+
+    /* Question review list */
+    .review-section {
+      margin-bottom: 24px;
+    }
+
+    .review-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 10px;
+    }
+
+    .review-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .review-tab {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--bg);
+      color: var(--text-muted);
+    }
+
+    .review-tab.active {
+      background: var(--text);
+      color: white;
+    }
+
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .review-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg);
+      border-radius: 10px;
+      font-size: 0.88rem;
+    }
+
+    .review-item .ri-num {
+      font-weight: 700;
+      width: 22px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .review-item .ri-detail {
+      flex: 1;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    .review-item .ri-badge {
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .review-item.ri-correct .ri-num {
+      color: var(--green);
+    }
+
+    .review-item.ri-correct .ri-badge {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .review-item.ri-wrong .ri-num {
+      color: var(--red);
+    }
+
+    .review-item.ri-wrong .ri-badge {
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    .review-item.ri-blank .ri-num {
+      color: var(--text-muted);
+    }
+
+    .review-item.ri-blank .ri-badge {
+      background: var(--bg);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    /* Actions */
+    .summary-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .btn-summary {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-summary:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-summary.primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 14px rgba(232, 131, 107, 0.25);
+    }
+
+    .btn-summary.secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+
+    .btn-summary.tertiary {
+      background: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 10px;
+    }
+
+    /* Scoreboard */
+    .scoreboard {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 12px 20px;
+      display: none;
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .scoreboard.visible {
+      display: block;
+      animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .scoreboard-inner {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .score-stats {
+      display: flex;
+      gap: 20px;
+    }
+
+    .score-stat {
+      text-align: center;
+    }
+
+    .score-stat .val {
+      font-size: 1.3rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .score-stat .lbl {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--text-muted);
+    }
+
+    .score-stat.s-correct .val {
+      color: var(--green);
+    }
+
+    .score-stat.s-wrong .val {
+      color: var(--red);
+    }
+
+    .score-stat.s-remaining .val {
+      color: var(--text-muted);
+    }
+
+    .progress-ring {
+      width: 52px;
+      height: 52px;
+      position: relative;
+    }
+
+    .progress-ring svg {
+      transform: rotate(-90deg);
+      width: 52px;
+      height: 52px;
+    }
+
+    .progress-ring .ring-bg {
+      fill: none;
+      stroke: var(--border);
+      stroke-width: 4;
+    }
+
+    .progress-ring .ring-fill {
+      fill: none;
+      stroke: var(--green);
+      stroke-width: 4;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.4s ease;
+    }
+
+    .progress-ring .ring-pct {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Confetti */
+    .confetti-piece {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      z-index: 300;
+      pointer-events: none;
+      animation: confettiFall 2.5s ease-out forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg) scale(0.3);
+      }
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--text);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 300;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Reset */
+    .reset-section {
+      text-align: center;
+      margin-top: 8px;
+      padding-bottom: 20px;
+      display: none;
+    }
+
+    .reset-section.visible {
+      display: block;
+    }
+
+    .btn-reset {
+      background: none;
+      border: 2px solid var(--border);
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-reset:hover {
+      border-color: var(--text);
+      color: var(--text);
+    }
+
+    /* Histórico / Progresso */
+    .history-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-top: 20px;
+    }
+
+    .history-card h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .history-empty {
+      text-align: center;
+      padding: 24px 16px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: var(--bg);
+      border-radius: 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .history-item:hover {
+      background: var(--accent-light);
+    }
+
+    .history-item .hi-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .history-item .hi-name {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .history-item .hi-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .history-item .hi-score {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-left: 12px;
+    }
+
+    .history-item .hi-score.good {
+      color: var(--green);
+    }
+
+    .history-item .hi-score.ok {
+      color: var(--yellow);
+    }
+
+    .history-item .hi-score.bad {
+      color: var(--red);
+    }
+
+    .history-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .history-actions button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-ver-hist {
+      background: var(--text);
+      color: white;
+    }
+
+    .btn-ver-hist:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-limpar-hist {
+      background: var(--bg);
+      color: var(--text-muted);
+      border: 2px solid var(--border);
+    }
+
+    .btn-limpar-hist:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* Modal histórico completo */
+    .history-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(45, 42, 38, 0.4);
+      backdrop-filter: blur(6px);
+      z-index: 250;
+      overflow-y: auto;
+      padding: 40px 16px;
+    }
+
+    .history-overlay.visible {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .history-modal {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 28px 24px;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      animation: modalIn 0.4s ease;
+    }
+
+    .history-modal h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    .history-modal .sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .history-full-list {
+      max-height: 360px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .history-full-item {
+      padding: 14px 16px;
+      background: var(--bg);
+      border-radius: 12px;
+      border-left: 4px solid transparent;
+    }
+
+    .history-full-item.best {
+      border-left-color: var(--green);
+    }
+
+    .history-full-item.improved {
+      border-left-color: var(--blue);
+    }
+
+    .history-full-item .hfi-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+    }
+
+    .history-full-item .hfi-name {
+      font-weight: 600;
+    }
+
+    .history-full-item .hfi-date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .history-full-item .hfi-stats {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .history-full-item .hfi-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 6px;
+      padding: 2px 10px;
+      border-radius: 20px;
+    }
+
+    .history-full-item .hfi-badge.best {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .history-full-item .hfi-badge.improved {
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+
+    /* ENEM Day Selector */
+    .day-selector {
+      display: flex;
+      gap: 8px;
+    }
+
+    .day-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    .day-btn:hover:not(.active) {
+      border-color: var(--text-muted);
+    }
+
+    /* Color Selector */
+    .color-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .color-btn {
+      flex: 1;
+      min-width: calc(50% - 4px);
+      padding: 10px 12px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .color-btn.active {
+      border-color: var(--text);
+      background: var(--bg);
+    }
+
+    .color-btn:hover:not(.active) {
+      border-color: var(--text-muted);
+    }
+
+    .color-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .color-dot.azul {
+      background: #2196F3;
+    }
+
+    .color-dot.amarelo {
+      background: #FFC107;
+    }
+
+    .color-dot.verde {
+      background: #4CAF50;
+    }
+
+    .color-dot.cinza {
+      background: #9E9E9E;
+    }
+
+    .color-dot.branco {
+      background: white;
+      border: 2px solid var(--border);
+    }
+
+    /* Language Selector */
+    .language-selector {
+      display: flex;
+      gap: 8px;
+    }
+
+    .lang-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .lang-btn.active {
+      border-color: var(--blue);
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+
+    .lang-btn:hover:not(.active) {
+      border-color: var(--text-muted);
+    }
+
+    /* ENEM History Styles */
+    .enem-history-card {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      border-left: 4px solid var(--border);
+    }
+
+    .enem-history-card.best {
+      border-left-color: var(--green);
+    }
+
+    .enem-history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .enem-history-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .enem-history-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .enem-history-score {
+      font-family: 'Fraunces', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .subject-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .subject-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subject-bar .sb-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      width: 80px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+
+    .subject-bar .sb-track {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .subject-bar .sb-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .subject-bar .sb-fill.good {
+      background: var(--green);
+    }
+
+    .subject-bar .sb-fill.ok {
+      background: var(--yellow);
+    }
+
+    .subject-bar .sb-fill.bad {
+      background: var(--red);
+    }
+
+    .subject-bar .sb-pct {
+      font-size: 0.75rem;
+      font-weight: 700;
+      width: 35px;
+      text-align: right;
+    }
+
+    .subject-bar .sb-diff {
+      font-size: 0.7rem;
+      font-weight: 600;
+      width: 40px;
+    }
+
+    .subject-bar .sb-diff.up {
+      color: var(--green);
+    }
+
+    .subject-bar .sb-diff.down {
+      color: var(--red);
+    }
+
+    /* Color Badge */
+    .color-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    .color-badge .color-dot {
+      width: 10px;
+      height: 10px;
+    }
+
+    .color-badge.azul {
+      background: rgba(33, 150, 243, 0.15);
+      color: #1976D2;
+    }
+
+    .color-badge.amarelo {
+      background: rgba(255, 193, 7, 0.15);
+      color: #F57F17;
+    }
+
+    .color-badge.verde {
+      background: rgba(76, 175, 80, 0.15);
+      color: #388E3C;
+    }
+
+    .color-badge.cinza {
+      background: rgba(158, 158, 158, 0.15);
+      color: #616161;
+    }
+
+    .color-badge.branco {
+      background: rgba(0, 0, 0, 0.05);
+      color: #424242;
+    }
+
+    .gabarito-presets {
+      margin-bottom: 20px;
+    }
+
+    .gabarito-presets h3 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .loading-years {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .preset-btn {
+      padding: 10px 12px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .preset-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .preset-btn .preset-year {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .cached-gabaritos-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--green-light);
+      border-radius: 10px;
+      gap: 10px;
+    }
+
+    .cache-badge {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--green);
+    }
+
+    .btn-ver-cache {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      background: var(--green);
+      color: white;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-ver-cache:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+
+    .gabarito-library-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .gabarito-lib-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      background: white;
+    }
+
+    .gabarito-lib-item .lib-info {
+      flex: 1;
+    }
+
+    .gabarito-lib-item .lib-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 2px;
+    }
+
+    .gabarito-lib-item .lib-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .gabarito-lib-item .lib-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .gabarito-lib-item .btn-lib-use {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      background: var(--blue);
+      color: white;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .gabarito-lib-item .btn-lib-delete {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      background: var(--red-light);
+      color: var(--red);
+      font-family: inherit;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    .timer-countdown {
+      background: var(--yellow-light);
+    }
+
+    .timer-countdown.warning {
+      background: var(--red-light);
+    }
+
+    .timer-countdown .timer-value {
+      color: var(--yellow);
+    }
+
+    .timer-countdown.warning .timer-value {
+      color: var(--red);
+    }
+
+    .partial-data-warning {
+      background: var(--yellow-light);
+      color: #856404;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      border: 1px solid #ffeeba;
+      line-height: 1.4;
+    }
+
+    .area-breakdown {
+      margin-bottom: 24px;
+    }
+
+    .area-breakdown-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 12px;
+    }
+
+    .area-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .area-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--bg);
+      border-radius: 12px;
+      border-left: 4px solid var(--border);
+    }
+
+    .area-card .area-emoji {
+      font-size: 1.2rem;
+    }
+
+    .area-card .area-info {
+      flex: 1;
+    }
+
+    .area-card .area-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 2px;
+    }
+
+    .area-card .area-stats {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .area-card .area-pct {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .area-card.good {
+      border-left-color: var(--green);
+    }
+
+    .area-card.good .area-pct {
+      color: var(--green);
+    }
+
+    .area-card.ok {
+      border-left-color: var(--yellow);
+    }
+
+    .area-card.ok .area-pct {
+      color: var(--yellow);
+    }
+
+    .area-card.bad {
+      border-left-color: var(--red);
+    }
+
+    .area-card.bad .area-pct {
+      color: var(--red);
+    }
+
+    .tri-section {
+      background: linear-gradient(135deg, var(--blue-light) 0%, var(--bg) 100%);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .tri-section .tri-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .tri-section .tri-score {
+      font-family: 'Fraunces', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .tri-section .tri-disclaimer {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .suggestions-section {
+      background: var(--yellow-light);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .suggestions-section h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .suggestions-section ul {
+      list-style: none;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .suggestions-section li {
+      margin-bottom: 6px;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .suggestions-section li:before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--yellow);
+      font-weight: bold;
+    }
+
+    .btn-retry-wrong {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 4px 14px rgba(107, 141, 232, 0.25);
+    }
+
+    /* Mode Selection Cards */
+    .mode-selection {
+      margin-bottom: 20px;
+    }
+
+    .mode-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .mode-card {
+      background: var(--card);
+      border: 3px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(232, 131, 107, 0.15);
+    }
+
+    .mode-card.active {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--accent-light) 0%, var(--card) 100%);
+    }
+
+    .mode-card.active::after {
+      content: '✓';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--accent);
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .mode-card .mode-icon {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .mode-card .mode-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .mode-card .mode-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .mode-card.enem-mode {
+      background: linear-gradient(135deg, #EEF2FD 0%, var(--card) 100%);
+    }
+
+    .mode-card.enem-mode:hover {
+      border-color: var(--blue);
+    }
+
+    .mode-card.enem-mode.active {
+      border-color: var(--blue);
+      background: linear-gradient(135deg, var(--blue-light) 0%, var(--card) 100%);
+    }
+
+    .mode-card.enem-mode.active::after {
+      background: var(--blue);
+    }
+
+    /* ENEM Section (shown when ENEM mode is selected) */
+    .enem-section {
+      display: none;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .enem-section.visible {
+      display: block;
+    }
+
+    .enem-section-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .enem-section-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Normal Mode Section */
+    .normal-section {
+      display: none;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .normal-section.visible {
+      display: block;
+    }
+
+    @media (max-width: 400px) {
+      .q-opt {
+        padding: 10px 0;
+        font-size: 0.88rem;
+      }
+
+      header h1 {
+        font-size: 1.7rem;
+      }
+
+      .summary-modal {
+        padding: 24px 18px;
+      }
+
+      .stats-grid {
+        gap: 8px;
+      }
+
+      .preset-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mode-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="container">
-  <header>
-    <h1>Confere Gabarito ✓</h1>
-    <p>Cole o gabarito, marque suas respostas e veja na hora se acertou</p>
-  </header>
+  <div class="container">
+    <header>
+      <h1>Confere Gabarito ✓</h1>
+      <p>Cole o gabarito, marque suas respostas e veja na hora se acertou</p>
+    </header>
 
-  <!-- Step 1 -->
-  <div class="step-card" id="step1">
-    <div class="step-label">
-      <div class="step-num">1</div>
-      <h2>Cole o gabarito</h2>
+    <!-- Step 1 -->
+    <div class="step-card" id="step1">
+      <div class="step-label">
+        <div class="step-num">1</div>
+        <h2>Escolha o modo</h2>
+      </div>
+
+      <!-- Mode Selection Cards -->
+      <div class="mode-selection">
+        <div class="mode-cards">
+          <div class="mode-card active" id="modeNormal" onclick="selectMode('normal')">
+            <span class="mode-icon">📝</span>
+            <div class="mode-title">Prova Normal</div>
+            <div class="mode-desc">Cole qualquer gabarito e confira suas respostas</div>
+          </div>
+          <div class="mode-card enem-mode" id="modeEnem" onclick="selectMode('enem')">
+            <span class="mode-icon">📚</span>
+            <div class="mode-title">Modo ENEM</div>
+            <div class="mode-desc">Gabaritos prontos, timer e análise por área</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Normal Mode Section -->
+      <div class="normal-section visible" id="normalSection">
+        <p class="step-description">
+          Digite as respostas certas em sequência, separadas por espaço, vírgula ou uma por linha.<br>
+          Ex: <strong>A B C D A E B C D A</strong>
+        </p>
+        <div class="name-row">
+          <input type="text" id="examName" placeholder="Nome da prova (opcional)" maxlength="60">
+        </div>
+        <textarea id="gabInput" placeholder="A B C D A E B C D A..." oninput="parseGabarito()"></textarea>
+        <div class="gabarito-preview" id="gabPreview"></div>
+        <button class="btn-start" id="btnStart" disabled onclick="startQuiz()">Começar</button>
+      </div>
+
+      <!-- ENEM Mode Section -->
+      <div class="enem-section" id="enemSection">
+        <div class="enem-section-card">
+          <h3>📅 Selecione o dia</h3>
+          <div class="day-selector visible" id="daySelector">
+            <button class="day-btn active" id="btnDia1" onclick="selectDay('dia1')">📖 Dia 1 (5h30)</button>
+            <button class="day-btn" id="btnDia2" onclick="selectDay('dia2')">📐 Dia 2 (5h)</button>
+          </div>
+        </div>
+
+        <div class="enem-section-card" id="languageCard">
+          <h3>🌐 Idioma estrangeiro</h3>
+          <div class="language-selector">
+            <button class="lang-btn active" id="btnIngles" onclick="selectLanguage('ingles')">🇬🇧 Inglês</button>
+            <button class="lang-btn" id="btnEspanhol" onclick="selectLanguage('espanhol')">🇪🇸 Espanhol</button>
+          </div>
+        </div>
+
+        <div class="enem-section-card">
+          <h3>🎨 Cor da prova</h3>
+          <div class="color-selector">
+            <button class="color-btn active" id="btnAzul" onclick="selectColor('azul')">
+              <span class="color-dot azul"></span> Azul
+            </button>
+            <button class="color-btn" id="btnAmarelo" onclick="selectColor('amarelo')">
+              <span class="color-dot amarelo"></span> Amarelo
+            </button>
+            <button class="color-btn" id="btnVerde" onclick="selectColor('verde')">
+              <span class="color-dot verde"></span> Verde
+            </button>
+            <button class="color-btn" id="btnCinza" onclick="selectColor('cinza')">
+              <span class="color-dot cinza"></span> Cinza
+            </button>
+            <button class="color-btn" id="btnBranco" onclick="selectColor('branco')">
+              <span class="color-dot branco"></span> Branco
+            </button>
+          </div>
+        </div>
+
+        <div class="enem-section-card">
+          <h3>📋 Carregar gabarito oficial</h3>
+          <div class="preset-grid" id="gabaritoPresets">
+            <button class="preset-btn" onclick="loadPresetWithOptions('2024')">ENEM 2024<br><span
+                class="preset-year">Carregar gabarito oficial</span></button>
+            <button class="preset-btn" onclick="loadPresetWithOptions('2023')">ENEM 2023<br><span
+                class="preset-year">Carregar gabarito oficial</span></button>
+          </div>
+          <div class="cached-gabaritos-info" id="cachedGabaritosInfo" style="display: none; margin-top: 12px;">
+            <span class="cache-badge">💾 <span id="cachedCount">0</span> gabaritos salvos</span>
+            <a href="biblioteca.html" class="btn-ver-cache">📚 Ver biblioteca</a>
+          </div>
+        </div>
+
+        <div class="enem-section-card">
+          <h3>✍️ Ou cole seu gabarito</h3>
+          <p class="step-description" style="margin-top: 0;">
+            Você também pode colar o gabarito oficial do ENEM aqui.
+          </p>
+          <div class="name-row">
+            <input type="text" id="examNameEnem" placeholder="Nome da prova (opcional)" maxlength="60">
+          </div>
+          <textarea id="gabInputEnem" placeholder="Cole aqui o gabarito do ENEM..."
+            oninput="parseGabaritoEnem()"></textarea>
+          <div class="gabarito-preview" id="gabPreviewEnem"></div>
+          <button class="btn-start" id="btnStartEnem" disabled onclick="startQuizEnem()">Começar ENEM</button>
+        </div>
+      </div>
     </div>
-    <p class="step-description">
-      Digite as respostas certas em sequência, separadas por espaço, vírgula ou uma por linha.<br>
-      Ex: <strong>A B C D A E B C D A</strong>
-    </p>
-    <div class="name-row">
-      <input type="text" id="examName" placeholder="Nome da prova (opcional)" maxlength="60">
+
+    <!-- Histórico -->
+    <div class="history-card" id="historyCard">
+      <h2>📈 Seu progresso</h2>
+      <div class="history-empty" id="historyEmpty">Complete uma prova para ver seu histórico aqui</div>
+      <div class="history-list" id="historyPreview" style="display: none;"></div>
+      <div class="history-actions" id="historyActions" style="display: none;">
+        <button class="btn-ver-hist" onclick="openHistoryModal()">Ver histórico completo</button>
+        <button class="btn-limpar-hist" onclick="clearHistory()">Limpar histórico</button>
+      </div>
     </div>
-    <textarea id="gabInput" placeholder="A B C D A E B C D A..." oninput="parseGabarito()"></textarea>
-    <div class="gabarito-preview" id="gabPreview"></div>
-    <button class="btn-start" id="btnStart" disabled onclick="startQuiz()">Começar</button>
+
+    <!-- Quiz -->
+    <div class="quiz-section" id="quizSection">
+      <div class="edit-link">
+        <a onclick="editGabarito()">← Editar gabarito</a>
+      </div>
+
+      <div class="timer-bar" id="timerBar">
+        <span class="timer-icon">⏱</span>
+        <span class="timer-value" id="timerValue">00:00</span>
+        <span class="timer-label">tempo decorrido</span>
+      </div>
+
+      <div id="questionsContainer"></div>
+
+      <div class="reset-section" id="resetSection">
+        <button class="btn-reset" onclick="resetQuiz()">Recomeçar</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Histórico -->
-  <div class="history-card" id="historyCard">
-    <h2>📈 Seu progresso</h2>
-    <div class="history-empty" id="historyEmpty">Complete uma prova para ver seu histórico aqui</div>
-    <div class="history-list" id="historyPreview" style="display: none;"></div>
-    <div class="history-actions" id="historyActions" style="display: none;">
-      <button class="btn-ver-hist" onclick="openHistoryModal()">Ver histórico completo</button>
-      <button class="btn-limpar-hist" onclick="clearHistory()">Limpar histórico</button>
+  <!-- Scoreboard -->
+  <div class="scoreboard" id="scoreboard">
+    <div class="scoreboard-inner">
+      <div class="score-stats">
+        <div class="score-stat s-correct">
+          <div class="val" id="sCorrect">0</div>
+          <div class="lbl">Certas</div>
+        </div>
+        <div class="score-stat s-wrong">
+          <div class="val" id="sWrong">0</div>
+          <div class="lbl">Erradas</div>
+        </div>
+        <div class="score-stat s-remaining">
+          <div class="val" id="sRemaining">0</div>
+          <div class="lbl">Restam</div>
+        </div>
+      </div>
+      <div class="progress-ring">
+        <svg viewBox="0 0 52 52">
+          <circle class="ring-bg" cx="26" cy="26" r="22" />
+          <circle class="ring-fill" id="ringFill" cx="26" cy="26" r="22" stroke-dasharray="138.23"
+            stroke-dashoffset="138.23" />
+        </svg>
+        <div class="ring-pct" id="ringPct">—</div>
+      </div>
     </div>
   </div>
 
-  <!-- Quiz -->
-  <div class="quiz-section" id="quizSection">
-    <div class="edit-link">
-      <a onclick="editGabarito()">← Editar gabarito</a>
-    </div>
+  <!-- Summary overlay -->
+  <div class="summary-overlay" id="summaryOverlay">
+    <div class="summary-modal" id="summaryModal">
+      <div class="summary-header">
+        <h2 id="summaryTitle">📊 Resultado Final</h2>
+        <p id="summaryExamName"></p>
+      </div>
 
-    <div class="timer-bar" id="timerBar">
-      <span class="timer-icon">⏱</span>
-      <span class="timer-value" id="timerValue">00:00</span>
-      <span class="timer-label">tempo decorrido</span>
-    </div>
+      <div class="big-score" id="bigScore">
+        <div class="big-score-circle">
+          <span class="pct" id="sumPct">0<span class="pct-sign">%</span></span>
+          <span class="pct-label">aproveitamento</span>
+        </div>
+        <div class="message" id="sumMessage"></div>
+      </div>
 
-    <div id="questionsContainer"></div>
+      <div class="stats-grid">
+        <div class="stat-box st-correct">
+          <div class="stat-val" id="sumCorrect">0</div>
+          <div class="stat-lbl">Certas</div>
+        </div>
+        <div class="stat-box st-wrong">
+          <div class="stat-val" id="sumWrong">0</div>
+          <div class="stat-lbl">Erradas</div>
+        </div>
+        <div class="stat-box st-time">
+          <div class="stat-val" id="sumTime">—</div>
+          <div class="stat-lbl">Tempo</div>
+        </div>
+      </div>
 
-    <div class="reset-section" id="resetSection">
-      <button class="btn-reset" onclick="resetQuiz()">Recomeçar</button>
+      <div class="visual-bar">
+        <div class="visual-bar-label">Distribuição das respostas</div>
+        <div class="bar-track">
+          <div class="bar-segment-correct" id="barCorrect"></div>
+          <div class="bar-segment-wrong" id="barWrong"></div>
+          <div class="bar-segment-blank" id="barBlank"></div>
+        </div>
+      </div>
+
+      <!-- ENEM: TRI Estimation -->
+      <div class="tri-section" id="triSection" style="display: none;">
+        <div class="tri-label">📊 Estimativa TRI</div>
+        <div class="tri-score" id="triScore">—</div>
+        <div class="tri-disclaimer">Estimativa simplificada baseada em acertos</div>
+      </div>
+
+      <!-- ENEM: Area Breakdown -->
+      <div class="area-breakdown" id="areaBreakdown" style="display: none;">
+        <div class="area-breakdown-title">Desempenho por área</div>
+        <div class="area-cards" id="areaCards"></div>
+      </div>
+
+      <!-- ENEM: Study Suggestions -->
+      <div class="suggestions-section" id="suggestionsSection" style="display: none;">
+        <h4>💡 Sugestões de estudo</h4>
+        <ul id="suggestionsList"></ul>
+      </div>
+
+      <div class="review-section">
+        <div class="review-title">Revisão por questão</div>
+        <div class="review-tabs">
+          <button class="review-tab active" onclick="filterReview('all', this)">Todas</button>
+          <button class="review-tab" onclick="filterReview('wrong', this)">Erradas</button>
+          <button class="review-tab" onclick="filterReview('correct', this)">Certas</button>
+        </div>
+        <div class="review-list" id="reviewList"></div>
+      </div>
+
+      <div class="summary-actions">
+        <button class="btn-summary btn-retry-wrong" id="btnRetryWrong" onclick="retryWrongQuestions()"
+          style="display: none;">🔄 Refazer só as erradas</button>
+        <button class="btn-summary primary" onclick="copyResults()">📋 Copiar resultado</button>
+        <button class="btn-summary secondary" onclick="closeSummary(); resetQuiz();">Tentar de novo</button>
+        <button class="btn-summary tertiary" onclick="closeSummary(); editGabarito();">Novo gabarito</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Scoreboard -->
-<div class="scoreboard" id="scoreboard">
-  <div class="scoreboard-inner">
-    <div class="score-stats">
-      <div class="score-stat s-correct">
-        <div class="val" id="sCorrect">0</div>
-        <div class="lbl">Certas</div>
-      </div>
-      <div class="score-stat s-wrong">
-        <div class="val" id="sWrong">0</div>
-        <div class="lbl">Erradas</div>
-      </div>
-      <div class="score-stat s-remaining">
-        <div class="val" id="sRemaining">0</div>
-        <div class="lbl">Restam</div>
-      </div>
-    </div>
-    <div class="progress-ring">
-      <svg viewBox="0 0 52 52">
-        <circle class="ring-bg" cx="26" cy="26" r="22"/>
-        <circle class="ring-fill" id="ringFill" cx="26" cy="26" r="22"
-          stroke-dasharray="138.23" stroke-dashoffset="138.23"/>
-      </svg>
-      <div class="ring-pct" id="ringPct">—</div>
+  <!-- Modal histórico completo -->
+  <div class="history-overlay" id="historyOverlay">
+    <div class="history-modal">
+      <h2>📊 Seu histórico</h2>
+      <p class="sub">Compare seus resultados e veja como está evoluindo, Tete!</p>
+      <div class="history-full-list" id="historyFullList"></div>
+      <button class="btn-summary secondary" onclick="closeHistoryModal()" style="width: 100%;">Fechar</button>
     </div>
   </div>
-</div>
 
-<!-- Summary overlay -->
-<div class="summary-overlay" id="summaryOverlay">
-  <div class="summary-modal" id="summaryModal">
-    <div class="summary-header">
-      <h2 id="summaryTitle">📊 Resultado Final</h2>
-      <p id="summaryExamName"></p>
-    </div>
+  <!-- Toast -->
+  <div class="toast" id="toast">Copiado!</div>
 
-    <div class="big-score" id="bigScore">
-      <div class="big-score-circle">
-        <span class="pct" id="sumPct">0<span class="pct-sign">%</span></span>
-        <span class="pct-label">aproveitamento</span>
-      </div>
-      <div class="message" id="sumMessage"></div>
-    </div>
+  <script>
+    const letters = ['A', 'B', 'C', 'D', 'E'];
+    const STORAGE_KEY = 'gabarito_results';
+    const MAX_RESULTS = 50;
+    let answerKey = [];
+    let answered = {};
+    let results = [];
+    let correctCount = 0;
+    let wrongCount = 0;
+    let timerInterval = null;
+    let startTime = null;
+    let elapsedSeconds = 0;
 
-    <div class="stats-grid">
-      <div class="stat-box st-correct">
-        <div class="stat-val" id="sumCorrect">0</div>
-        <div class="stat-lbl">Certas</div>
-      </div>
-      <div class="stat-box st-wrong">
-        <div class="stat-val" id="sumWrong">0</div>
-        <div class="stat-lbl">Erradas</div>
-      </div>
-      <div class="stat-box st-time">
-        <div class="stat-val" id="sumTime">—</div>
-        <div class="stat-lbl">Tempo</div>
-      </div>
-    </div>
+    // ENEM Mode Variables
+    let enemMode = false;
+    let selectedDay = 'dia1';
+    let selectedColor = 'azul';
+    let selectedLanguage = 'ingles';
+    let selectedYear = '2024';
+    let remainingSeconds = 0;
+    let isRetryMode = false;
+    let originalQuestionNumbers = [];
 
-    <div class="visual-bar">
-      <div class="visual-bar-label">Distribuição das respostas</div>
-      <div class="bar-track">
-        <div class="bar-segment-correct" id="barCorrect"></div>
-        <div class="bar-segment-wrong" id="barWrong"></div>
-        <div class="bar-segment-blank" id="barBlank"></div>
-      </div>
-    </div>
+    // ENEM API Configuration
+    const ENEM_API_URL = 'https://api.enem.dev/v1';
+    const gabaritosCache = {}; // Cache para evitar chamadas repetidas
+    let availableApiYears = []; // Anos disponíveis na API
 
-    <div class="review-section">
-      <div class="review-title">Revisão por questão</div>
-      <div class="review-tabs">
-        <button class="review-tab active" onclick="filterReview('all', this)">Todas</button>
-        <button class="review-tab" onclick="filterReview('wrong', this)">Erradas</button>
-        <button class="review-tab" onclick="filterReview('correct', this)">Certas</button>
-      </div>
-      <div class="review-list" id="reviewList"></div>
-    </div>
+    // Estrutura correta das áreas do ENEM
+    const ENEM_AREAS = {
+      dia1: [
+        { name: 'Idioma', emoji: '🌐', start: 1, end: 5, color: '#9C27B0' },
+        { name: 'Linguagens', emoji: '📖', start: 6, end: 45, color: '#6B8DE8' },
+        { name: 'Humanas', emoji: '🌍', start: 46, end: 90, color: '#E8836B' }
+      ],
+      dia2: [
+        { name: 'Natureza', emoji: '🔬', start: 1, end: 45, color: '#4CAF82' },
+        { name: 'Matemática', emoji: '📐', start: 46, end: 90, color: '#F9A825' }
+      ]
+    };
 
-    <div class="summary-actions">
-      <button class="btn-summary primary" onclick="copyResults()">📋 Copiar resultado</button>
-      <button class="btn-summary secondary" onclick="closeSummary(); resetQuiz();">Tentar de novo</button>
-      <button class="btn-summary tertiary" onclick="closeSummary(); editGabarito();">Novo gabarito</button>
-    </div>
-  </div>
-</div>
+    const ENEM_TIMES = { dia1: 330 * 60, dia2: 300 * 60 };
 
-<!-- Modal histórico completo -->
-<div class="history-overlay" id="historyOverlay">
-  <div class="history-modal">
-    <h2>📊 Seu histórico</h2>
-    <p class="sub">Compare seus resultados e veja como está evoluindo, Tete!</p>
-    <div class="history-full-list" id="historyFullList"></div>
-    <button class="btn-summary secondary" onclick="closeHistoryModal()" style="width: 100%;">Fechar</button>
-  </div>
-</div>
-
-<!-- Toast -->
-<div class="toast" id="toast">Copiado!</div>
-
-<script>
-  const letters = ['A','B','C','D','E'];
-  const STORAGE_KEY = 'gabarito_results';
-  const MAX_RESULTS = 50;
-  let answerKey = [];
-  let answered = {};
-  let results = []; // {q, chosen, correct, status}
-  let correctCount = 0;
-  let wrongCount = 0;
-  let timerInterval = null;
-  let startTime = null;
-  let elapsedSeconds = 0;
-
-  // ---- PARSE ----
-  function parseGabarito() {
-    const raw = document.getElementById('gabInput').value.toUpperCase().trim();
-    if (!raw) {
-      answerKey = [];
-      document.getElementById('gabPreview').classList.remove('visible');
-      document.getElementById('btnStart').disabled = true;
-      return;
-    }
-
-    let parts = raw.split(/[\s,;\.\-\/\n\r]+/).filter(Boolean);
-    let parsed = [];
-
-    parts.forEach(part => {
-      if (part.length > 1 && /^[A-E]+$/.test(part)) {
-        parsed.push(...part.split(''));
-      } else if (/^[A-E]$/.test(part)) {
-        parsed.push(part);
-      } else if (/^\d+[.\-\)]?\s?[A-E]$/.test(part)) {
-        parsed.push(part.slice(-1));
+    // Gabaritos oficiais do ENEM 2024 - Caderno Azul
+    // Fonte: INEP (gov.br) - Verificado em 2024
+    // Estrutura Dia 1: Q1-5 (Idioma) + Q6-45 (Linguagens 40q) + Q46-90 (Humanas 45q) = 90 questões
+    // Estrutura Dia 2: Q1-45 (Natureza 45q) + Q46-90 (Matemática 45q) = 90 questões
+    const ENEM_GABARITOS_2024 = {
+      dia1: {
+        azul: {
+          // Questões 1-5: Idioma Estrangeiro
+          ingles: 'C A A A E',
+          espanhol: 'C D A D A',
+          // Questões 6-45: Linguagens (40 questões) + Questões 46-90: Humanas (45 questões)
+          comum: 'E C B E C E D D C B D E D D C E C B D C B C E A D B B D B D D C B E D A D E E B C E C E B E B C D B A D D E B B A B C D C A E C E D A D B A E A B E A D C E D A D A C B C'
+        }
+      },
+      dia2: {
+        azul: {
+          // Questões 1-45: Natureza (45 questões) + Questões 46-90: Matemática (45 questões)
+          comum: 'B C E A A C D E D C A A E D D D E B B D D B E C C A E D B B A A A C C A E E C C B B C E D A B B A B B A D D D B B C E C E A D C E B C E C D B A D C B E D A E C A D A C D B C E C E'
+        }
       }
-    });
+    };
 
-    answerKey = parsed;
+    // Gabaritos legados (manter compatibilidade)
+    const ENEM_GABARITOS = {
+      '2024_dia1_azul_ingles': { name: 'ENEM 2024 - Dia 1 (Azul/Inglês)', day: 'dia1', color: 'azul', language: 'ingles' },
+      '2024_dia1_azul_espanhol': { name: 'ENEM 2024 - Dia 1 (Azul/Espanhol)', day: 'dia1', color: 'azul', language: 'espanhol' },
+      '2024_dia2_azul': { name: 'ENEM 2024 - Dia 2 (Azul)', day: 'dia2', color: 'azul' }
+    };
 
-    const preview = document.getElementById('gabPreview');
-    preview.innerHTML = '';
-    if (parsed.length > 0) {
-      parsed.forEach((letter, i) => {
-        const chip = document.createElement('span');
-        chip.className = 'gab-chip';
-        chip.innerHTML = `<span class="gab-num">${i+1}.</span>${letter}`;
-        preview.appendChild(chip);
+    // ============ ENEM API FUNCTIONS ============
+
+    // Busca anos disponíveis na API (com timeout e fallback)
+    async function fetchEnemYears() {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+        const response = await fetch(`${ENEM_API_URL}/exams`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        availableApiYears = data.map(e => e.year).sort((a, b) => b - a);
+        return availableApiYears;
+      } catch (error) {
+        console.warn('[ENEM API] Não conseguiu buscar anos:', error.message);
+        // Fallback: anos conhecidos que a API costuma ter
+        return [2023, 2022, 2021, 2020, 2019, 2018, 2017];
+      }
+    }
+
+    // Busca gabarito da API por ano e idioma (com paginação e cache localStorage)
+    const GABARITO_CACHE_KEY = 'enem_gabaritos_cache';
+
+    function getGabaritosFromStorage() {
+      try {
+        const raw = localStorage.getItem(GABARITO_CACHE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveGabaritoToStorage(cacheKey, data) {
+      try {
+        const cache = getGabaritosFromStorage();
+        cache[cacheKey] = { data, savedAt: Date.now() };
+        localStorage.setItem(GABARITO_CACHE_KEY, JSON.stringify(cache));
+      } catch (e) {
+        console.warn('Erro ao salvar cache:', e);
+      }
+    }
+
+    async function fetchEnemGabaritoFromApi(year, language = 'ingles') {
+      const cacheKey = `${year}_${language}`;
+
+      // Verificar cache em memória
+      if (gabaritosCache[cacheKey]) {
+        return gabaritosCache[cacheKey];
+      }
+
+      // Verificar cache no localStorage
+      const storedCache = getGabaritosFromStorage();
+      if (storedCache[cacheKey]) {
+        gabaritosCache[cacheKey] = storedCache[cacheKey].data;
+        return storedCache[cacheKey].data;
+      }
+
+      try {
+        // =====================================================
+        // A API SÓ aceita: limit, offset, language como params
+        // "discipline" NÃO é um filtro — é campo da resposta.
+        // 
+        // ENEM = 180 questões (90/dia). Com limit=50 precisamos
+        // de 4 páginas. Usamos metadata.hasMore pra parar.
+        // Delay entre requests pra evitar 429 (rate limit).
+        // =====================================================
+        let allQuestions = [];
+        let offset = 0;
+        const limit = 50;
+        let hasMore = true;
+        const maxPages = 8;
+        let page = 0;
+
+        const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+        while (hasMore && page < maxPages) {
+          if (page > 0) await delay(300); // Evitar 429 rate limit
+
+          const url = `${ENEM_API_URL}/exams/${year}/questions?limit=${limit}&offset=${offset}&language=${language}`;
+          console.log(`[ENEM API] Página ${page + 1}: offset=${offset}`);
+
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+          const response = await fetch(url, { signal: controller.signal });
+          clearTimeout(timeoutId);
+
+          if (response.status === 429) {
+            console.warn(`[ENEM API] Rate limit (429) na página ${page + 1}. Aguardando 2s...`);
+            await delay(2000);
+            continue; // Tentar mesma página de novo
+          }
+
+          if (!response.ok) {
+            console.error(`[ENEM API] HTTP ${response.status} na página ${page + 1}`);
+            break;
+          }
+
+          const data = await response.json();
+
+          if (data.questions && data.questions.length > 0) {
+            allQuestions = allQuestions.concat(data.questions);
+            console.log(`[ENEM API] +${data.questions.length} questões (total: ${allQuestions.length}/${data.metadata?.total || '?'})`);
+          }
+
+          // Usar metadata.hasMore da API pra saber se continua
+          hasMore = data.metadata?.hasMore === true;
+          offset += limit;
+          page++;
+        }
+
+        if (allQuestions.length === 0) {
+          throw new Error('Nenhuma questão encontrada');
+        }
+
+        console.log(`[ENEM API] Total bruto: ${allQuestions.length} questões para ${year}`);
+
+        // Deduplicar por (discipline + index)
+        const seen = new Set();
+        const uniqueQuestions = allQuestions.filter(q => {
+          const key = `${q.discipline}_${q.index}`;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+
+        console.log(`[ENEM API] Após dedup: ${uniqueQuestions.length} questões únicas`);
+
+        // Log das disciplinas encontradas para debug
+        const disciplines = [...new Set(uniqueQuestions.map(q => q.discipline))];
+        console.log(`[ENEM API] Disciplinas encontradas:`, disciplines);
+
+        // Montar gabaritos separados por dia
+        // Dia 1: linguagens (index 1-45, pos 0-44) + ciencias-humanas (index 1-45, pos 45-89)
+        // Dia 2: ciencias-natureza (index 1-45, pos 0-44) + matematica (index 1-45, pos 45-89)
+        const gabarito = {
+          dia1: new Array(90).fill(null),
+          dia2: new Array(90).fill(null)
+        };
+
+        // Debug: contar questões com correctAlternative por disciplina
+        const disciplineStats = {};
+        uniqueQuestions.forEach(q => {
+          if (!disciplineStats[q.discipline]) {
+            disciplineStats[q.discipline] = { total: 0, withAlt: 0, indices: [] };
+          }
+          disciplineStats[q.discipline].total++;
+          if (q.correctAlternative) {
+            disciplineStats[q.discipline].withAlt++;
+          }
+          disciplineStats[q.discipline].indices.push(q.index);
+        });
+        console.log('[ENEM API] Stats por disciplina:', disciplineStats);
+
+        // Log de uma questão de cada disciplina para ver estrutura
+        disciplines.forEach(d => {
+          const sample = uniqueQuestions.find(q => q.discipline === d);
+          if (sample) {
+            console.log(`[ENEM API] Exemplo ${d}:`, {
+              index: sample.index,
+              correctAlternative: sample.correctAlternative,
+              answer: sample.answer,
+              alternative: sample.alternative,
+              correct: sample.correct
+            });
+          }
+        });
+
+        // Agrupar questões por disciplina e ordenar por índice
+        const byDiscipline = {
+          'linguagens': [],
+          'ciencias-humanas': [],
+          'ciencias-natureza': [],
+          'matematica': []
+        };
+
+        uniqueQuestions.forEach(q => {
+          if (q.correctAlternative && byDiscipline[q.discipline]) {
+            byDiscipline[q.discipline].push(q);
+          }
+        });
+
+        // Ordenar cada disciplina por índice e pegar as primeiras 45
+        Object.keys(byDiscipline).forEach(d => {
+          byDiscipline[d].sort((a, b) => a.index - b.index);
+          byDiscipline[d] = byDiscipline[d].slice(0, 45);
+        });
+
+        console.log('[ENEM API] Questões por disciplina:', {
+          linguagens: byDiscipline['linguagens'].length,
+          humanas: byDiscipline['ciencias-humanas'].length,
+          natureza: byDiscipline['ciencias-natureza'].length,
+          matematica: byDiscipline['matematica'].length
+        });
+
+        // Montar gabarito usando posição sequencial (0-44) dentro de cada disciplina
+        byDiscipline['linguagens'].forEach((q, i) => {
+          gabarito.dia1[i] = q.correctAlternative;  // pos 0-44
+        });
+        byDiscipline['ciencias-humanas'].forEach((q, i) => {
+          gabarito.dia1[45 + i] = q.correctAlternative;  // pos 45-89
+        });
+        byDiscipline['ciencias-natureza'].forEach((q, i) => {
+          gabarito.dia2[i] = q.correctAlternative;  // pos 0-44
+        });
+        byDiscipline['matematica'].forEach((q, i) => {
+          gabarito.dia2[45 + i] = q.correctAlternative;  // pos 45-89
+        });
+
+        const dia1Count = gabarito.dia1.filter(x => x !== null).length;
+        const dia2Count = gabarito.dia2.filter(x => x !== null).length;
+        console.log(`[ENEM API] Montado — Dia 1: ${dia1Count}/90 | Dia 2: ${dia2Count}/90`);
+
+        const result = {
+          dia1: gabarito.dia1.filter(x => x).join(' '),
+          dia2: gabarito.dia2.filter(x => x).join(' ')
+        };
+
+        // Salvar no cache se temos dados suficientes
+        if (dia1Count >= 40 || dia2Count >= 40) {
+          gabaritosCache[cacheKey] = result;
+          saveGabaritoToStorage(cacheKey, result);
+        } else {
+          console.warn(`[ENEM API] Dados insuficientes (Dia1: ${dia1Count}, Dia2: ${dia2Count}). Não salvou no cache.`);
+        }
+
+        return result;
+      } catch (error) {
+        console.error('[ENEM API] Erro:', error);
+        return null;
+      }
+    }
+
+    // Renderiza o seletor de anos dinamicamente
+    async function renderYearSelector() {
+      const container = document.getElementById('gabaritoPresets');
+      if (!container) return;
+
+      // Mostrar loading
+      container.innerHTML = '<div class="loading-years">Carregando anos disponíveis...</div>';
+
+      // Buscar anos da API (retorna fallback se offline)
+      const apiYears = await fetchEnemYears();
+      const apiOnline = availableApiYears.length > 0; // true se a API respondeu
+
+      // Sempre incluir 2024 (local) e adicionar anos da API/fallback
+      const allYears = new Set([2024, ...apiYears]);
+      const sortedYears = Array.from(allYears).sort((a, b) => b - a);
+
+      // Limitar aos 6 anos mais recentes
+      const yearsToShow = sortedYears.slice(0, 6);
+
+      let html = '';
+
+      if (!apiOnline) {
+        html += '<div style="grid-column: 1/-1; text-align:center; padding:8px; font-size:0.8rem; color:var(--yellow); background:var(--yellow-light); border-radius:8px; margin-bottom:8px;">⚠️ API offline — anos disponíveis podem variar</div>';
+      }
+
+      html += yearsToShow.map(year => {
+        const source = year === 2024 ? '(Local)' : '(API)';
+        return `
+          <button class="preset-btn" onclick="loadPresetWithOptions('${year}')">
+            ENEM ${year}
+            <br><span class="preset-year">Carregar gabarito oficial ${source}</span>
+          </button>
+        `;
+      }).join('');
+
+      container.innerHTML = html;
+
+      // Atualizar contador de cache
+      updateCachedGabaritosInfo();
+    }
+
+    // Atualiza info de gabaritos salvos
+    function updateCachedGabaritosInfo() {
+      const cache = getGabaritosFromStorage();
+      const count = Object.keys(cache).length;
+      const infoDiv = document.getElementById('cachedGabaritosInfo');
+      const countSpan = document.getElementById('cachedCount');
+
+      if (count > 0 && infoDiv) {
+        infoDiv.style.display = 'flex';
+        countSpan.textContent = count;
+      } else if (infoDiv) {
+        infoDiv.style.display = 'none';
+      }
+    }
+
+    // Mostra modal de biblioteca de gabaritos salvos
+    function showCachedGabaritos() {
+      const cache = getGabaritosFromStorage();
+      const entries = Object.entries(cache);
+
+      if (entries.length === 0) {
+        showToast('Nenhum gabarito salvo ainda');
+        return;
+      }
+
+      // Criar modal
+      let modalHtml = `
+        <div class="summary-overlay" id="gabaritoLibraryOverlay" onclick="closeGabaritoLibrary(event)">
+          <div class="summary-modal" onclick="event.stopPropagation()">
+            <div class="close-summary" onclick="closeGabaritoLibrary()">&times;</div>
+            <h2 style="margin-bottom: 16px;">📚 Biblioteca de Gabaritos</h2>
+            <div class="gabarito-library-list">
+      `;
+
+      entries.sort((a, b) => b[1].savedAt - a[1].savedAt);
+
+      entries.forEach(([key, value]) => {
+        const [year, lang] = key.split('_');
+        const savedDate = new Date(value.savedAt).toLocaleDateString('pt-BR');
+        const dia1Count = value.data.dia1?.split(' ').filter(x => x).length || 0;
+        const dia2Count = value.data.dia2?.split(' ').filter(x => x).length || 0;
+
+        modalHtml += `
+          <div class="gabarito-lib-item">
+            <div class="lib-info">
+              <div class="lib-title">ENEM ${year} (${lang === 'ingles' ? 'Inglês' : 'Espanhol'})</div>
+              <div class="lib-meta">Salvo em ${savedDate} • Dia 1: ${dia1Count}q / Dia 2: ${dia2Count}q</div>
+            </div>
+            <div class="lib-actions">
+              <button class="btn-lib-use" onclick="useCachedGabarito('${key}', 'dia1')">Dia 1</button>
+              <button class="btn-lib-use" onclick="useCachedGabarito('${key}', 'dia2')">Dia 2</button>
+              <button class="btn-lib-delete" onclick="deleteCachedGabarito('${key}')">🗑</button>
+            </div>
+          </div>
+        `;
       });
-      preview.classList.add('visible');
-      document.getElementById('btnStart').disabled = false;
-    } else {
-      preview.classList.remove('visible');
-      document.getElementById('btnStart').disabled = true;
-    }
-  }
 
-  // ---- TIMER ----
-  function startTimer() {
-    startTime = Date.now();
-    elapsedSeconds = 0;
-    document.getElementById('timerBar').classList.add('visible');
-    timerInterval = setInterval(() => {
+      modalHtml += `
+            </div>
+            <div style="margin-top: 16px; text-align: center;">
+              <button class="btn-limpar-hist" onclick="clearGabaritoCache()">Limpar todos os gabaritos</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    function closeGabaritoLibrary(event) {
+      if (event && event.target.id !== 'gabaritoLibraryOverlay') return;
+      const overlay = document.getElementById('gabaritoLibraryOverlay');
+      if (overlay) overlay.remove();
+    }
+
+    function useCachedGabarito(cacheKey, day) {
+      const cache = getGabaritosFromStorage();
+      if (!cache[cacheKey]) {
+        showToast('Gabarito não encontrado');
+        return;
+      }
+
+      const [year, lang] = cacheKey.split('_');
+      const gabaritoString = cache[cacheKey].data[day];
+
+      if (!gabaritoString) {
+        showToast(`Gabarito do ${day === 'dia1' ? 'Dia 1' : 'Dia 2'} não disponível`);
+        return;
+      }
+
+      selectDay(day);
+      selectLanguage(lang);
+
+      const examName = `ENEM ${year} - ${day === 'dia1' ? 'Dia 1' : 'Dia 2'} (${lang === 'ingles' ? 'Inglês' : 'Espanhol'}) [Cache]`;
+      document.getElementById('gabInputEnem').value = gabaritoString;
+      document.getElementById('examNameEnem').value = examName;
+      parseGabaritoEnem();
+
+      closeGabaritoLibrary();
+      showToast(`✓ ${examName} carregado do cache!`);
+    }
+
+    function deleteCachedGabarito(cacheKey) {
+      const cache = getGabaritosFromStorage();
+      delete cache[cacheKey];
+      localStorage.setItem(GABARITO_CACHE_KEY, JSON.stringify(cache));
+
+      // Refresh modal
+      closeGabaritoLibrary();
+      showCachedGabaritos();
+      updateCachedGabaritosInfo();
+      showToast('Gabarito removido');
+    }
+
+    function clearGabaritoCache() {
+      if (!confirm('Limpar todos os gabaritos salvos?')) return;
+      localStorage.removeItem(GABARITO_CACHE_KEY);
+      closeGabaritoLibrary();
+      updateCachedGabaritosInfo();
+      showToast('Cache de gabaritos limpo');
+    }
+
+    // Carrega gabarito - tenta API primeiro, fallback para local
+    async function loadGabaritoHybrid(year, day, language) {
+      const yearNum = parseInt(year);
+
+      // 2024 usa gabarito local (API não tem)
+      if (yearNum === 2024) {
+        return loadLocalGabarito(year, day, language);
+      }
+
+      // Tentar API para outros anos
+      showToast('🔄 Buscando gabarito...');
+      const apiGabarito = await fetchEnemGabaritoFromApi(yearNum, language);
+
+      if (apiGabarito && apiGabarito[day]) {
+        return apiGabarito[day];
+      }
+
+      // Fallback: gabarito local se disponível
+      showToast('⚠️ API indisponível, usando local');
+      return loadLocalGabarito(year, day, language);
+    }
+
+    // Carrega gabarito local (2024)
+    function loadLocalGabarito(year, day, language) {
+      if (year !== '2024' && year !== 2024) return null;
+
+      const dayData = ENEM_GABARITOS_2024[day];
+      if (!dayData || !dayData[selectedColor]) return null;
+
+      const colorData = dayData[selectedColor];
+
+      if (day === 'dia1') {
+        const idiomaGab = colorData[language] || colorData.ingles;
+        return idiomaGab + ' ' + colorData.comum;
+      } else {
+        return colorData.comum;
+      }
+    }
+
+    // ============ ENEM Mode Functions ============
+    function selectMode(mode) {
+      const normalCard = document.getElementById('modeNormal');
+      const enemCard = document.getElementById('modeEnem');
+      const normalSection = document.getElementById('normalSection');
+      const enemSection = document.getElementById('enemSection');
+
+      if (mode === 'normal') {
+        enemMode = false;
+        normalCard.classList.add('active');
+        enemCard.classList.remove('active');
+        normalSection.classList.add('visible');
+        enemSection.classList.remove('visible');
+      } else if (mode === 'enem') {
+        enemMode = true;
+        enemCard.classList.add('active');
+        normalCard.classList.remove('active');
+        enemSection.classList.add('visible');
+        normalSection.classList.remove('visible');
+        // Carregar anos disponíveis da API dinamicamente
+        renderYearSelector();
+      }
+    }
+
+    function selectDay(day) {
+      selectedDay = day;
+      document.getElementById('btnDia1').classList.toggle('active', day === 'dia1');
+      document.getElementById('btnDia2').classList.toggle('active', day === 'dia2');
+
+      // Mostrar/esconder seletor de idioma (só dia 1 tem idioma estrangeiro)
+      const languageCard = document.getElementById('languageCard');
+      if (languageCard) {
+        languageCard.style.display = day === 'dia1' ? 'block' : 'none';
+      }
+    }
+
+    function selectColor(color) {
+      selectedColor = color;
+      const colors = ['azul', 'amarelo', 'verde', 'cinza', 'branco'];
+      colors.forEach(c => {
+        const btn = document.getElementById('btn' + c.charAt(0).toUpperCase() + c.slice(1));
+        if (btn) btn.classList.toggle('active', c === color);
+      });
+    }
+
+    function selectLanguage(lang) {
+      selectedLanguage = lang;
+      document.getElementById('btnIngles').classList.toggle('active', lang === 'ingles');
+      document.getElementById('btnEspanhol').classList.toggle('active', lang === 'espanhol');
+    }
+
+    async function loadPresetWithOptions(year) {
+      selectedYear = year;
+      const yearNum = parseInt(year);
+
+      // Nota: API só tem inglês, mas para 2024 temos espanhol local
+      const gabaritoString = await loadGabaritoHybrid(year, selectedDay, selectedLanguage);
+
+      if (!gabaritoString) {
+        // Para anos da API sem o dia/cor selecionado, mostrar erro amigável
+        if (yearNum === 2024 && selectedColor !== 'azul') {
+          showToast(`❌ Gabarito ${selectedColor} não disponível para ${year}`);
+        } else if (yearNum !== 2024) {
+          showToast(`❌ Gabarito ${year} não encontrado na API`);
+        } else {
+          showToast(`❌ Erro ao carregar gabarito ${year}`);
+        }
+        return;
+      }
+
+      // Contar questões carregadas
+      const questionCount = gabaritoString.split(' ').filter(x => x.trim()).length;
+      const isComplete = questionCount >= 90;
+
+      const colorName = selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1);
+      const langName = selectedDay === 'dia1' ? (selectedLanguage === 'ingles' ? 'Inglês' : 'Espanhol') : '';
+      const source = yearNum === 2024 ? '' : ' (via API)';
+      const examName = `ENEM ${year} - Dia ${selectedDay === 'dia1' ? '1' : '2'} (${colorName}${langName ? '/' + langName : ''})${source}`;
+
+      document.getElementById('gabInputEnem').value = gabaritoString;
+      document.getElementById('examNameEnem').value = examName;
+      parseGabaritoEnem();
+
+      // Toast com info de completude
+      if (isComplete) {
+        showToast(`✓ ${examName} carregado! (${questionCount} questões)`);
+      } else {
+        showToast(`⚠️ ${examName} carregado com ${questionCount}/90 questões (dados incompletos na API)`);
+      }
+
+      // Atualizar contador de cache
+      updateCachedGabaritosInfo();
+    }
+
+    function loadPreset(presetKey) {
+      const preset = ENEM_GABARITOS[presetKey];
+      if (!preset) return;
+
+      // Preenche o campo de gabarito do ENEM
+      document.getElementById('gabInputEnem').value = preset.answers || '';
+      document.getElementById('examNameEnem').value = preset.name;
+      selectDay(preset.day);
+      if (preset.color) selectColor(preset.color);
+      if (preset.language) selectLanguage(preset.language);
+      parseGabaritoEnem();
+      showToast(`✓ ${preset.name} carregado!`);
+    }
+
+    // Parse gabarito para modo ENEM
+    function parseGabaritoEnem() {
+      const raw = document.getElementById('gabInputEnem').value.toUpperCase().trim();
+      if (!raw) {
+        answerKey = [];
+        document.getElementById('gabPreviewEnem').classList.remove('visible');
+        document.getElementById('btnStartEnem').disabled = true;
+        return;
+      }
+
+      let parts = raw.split(/[\s,;\.\-\/\n\r]+/).filter(Boolean);
+      let parsed = [];
+
+      parts.forEach(part => {
+        if (part.length > 1 && /^[A-E]+$/.test(part)) {
+          parsed.push(...part.split(''));
+        } else if (/^[A-E]$/.test(part)) {
+          parsed.push(part);
+        } else if (/^\d+[\.\-\)]?\s?[A-E]$/.test(part)) {
+          parsed.push(part.slice(-1));
+        }
+      });
+
+      answerKey = parsed;
+
+      const preview = document.getElementById('gabPreviewEnem');
+      preview.innerHTML = '';
+      if (parsed.length > 0) {
+        // Show only first 10 and last 5 for long gabaritos
+        const toShow = parsed.length > 20
+          ? [...parsed.slice(0, 10), '...', ...parsed.slice(-5)]
+          : parsed;
+
+        toShow.forEach((letter, i) => {
+          if (letter === '...') {
+            const chip = document.createElement('span');
+            chip.className = 'gab-chip';
+            chip.innerHTML = `<span style="color: var(--text-muted);">... +${parsed.length - 15} questões ...</span>`;
+            preview.appendChild(chip);
+          } else {
+            const realIndex = i < 10 ? i : (parsed.length - 5 + (i - 11));
+            const chip = document.createElement('span');
+            chip.className = 'gab-chip';
+            chip.innerHTML = `<span class="gab-num">${(i < 10 ? i + 1 : parsed.length - 5 + (i - 10))}.</span>${letter}`;
+            preview.appendChild(chip);
+          }
+        });
+        preview.classList.add('visible');
+        document.getElementById('btnStartEnem').disabled = false;
+      } else {
+        preview.classList.remove('visible');
+        document.getElementById('btnStartEnem').disabled = true;
+      }
+    }
+
+    function startQuizEnem() {
+      // Usa o gabarito do modo ENEM
+      const examName = document.getElementById('examNameEnem').value.trim();
+      if (examName) {
+        document.getElementById('examName').value = examName;
+      }
+      startQuiz();
+    }
+
+    function estimateTRI(correct, total) {
+      const pct = total > 0 ? correct / total : 0;
+      const minScore = 300;
+      const maxScore = 800;
+      const estimated = minScore + (pct * (maxScore - minScore));
+      const variance = 40;
+      return { low: Math.round(estimated - variance), high: Math.round(estimated + variance) };
+    }
+
+    function getAreaPerformance() {
+      const areas = ENEM_AREAS[selectedDay];
+      return areas.map(area => {
+        let areaCorrect = 0, areaTotal = 0;
+        for (let q = area.start; q <= area.end; q++) {
+          const r = results.find(x => x.q === q);
+          if (r) {
+            areaTotal++;
+            if (r.status === 'correct') areaCorrect++;
+          }
+        }
+        const pct = areaTotal > 0 ? Math.round((areaCorrect / areaTotal) * 100) : 0;
+        return { ...area, correct: areaCorrect, total: areaTotal, pct };
+      });
+    }
+
+    function generateSuggestions(areaPerf) {
+      const suggestions = [];
+      const weak = areaPerf.filter(a => a.pct < 60).sort((x, y) => x.pct - y.pct);
+      const strong = areaPerf.filter(a => a.pct >= 70).sort((x, y) => y.pct - x.pct);
+      if (weak.length > 0) {
+        const names = weak.map(a => `${a.name} (${a.pct}%)`).join(' e ');
+        suggestions.push(`Você errou mais em ${names}. Foque nessas áreas!`);
+      }
+      if (strong.length > 0) {
+        const names = strong.map(a => a.name).join(' e ');
+        suggestions.push(`${names} estão ótimas! Continue assim! 🌟`);
+      }
+      if (weak.length === 0 && strong.length === 0) {
+        suggestions.push('Continue estudando para melhorar em todas as áreas!');
+      }
+      return suggestions;
+    }
+
+    function retryWrongQuestions() {
+      const wrongOnes = results.filter(r => r.status === 'wrong');
+      if (wrongOnes.length === 0) return;
+      isRetryMode = true;
+      originalQuestionNumbers = wrongOnes.map(r => r.q);
+      const wrongAnswers = wrongOnes.map(r => answerKey[r.q - 1]);
+      answerKey = wrongAnswers;
+      document.getElementById('examName').value = `Revisão: ${wrongOnes.length} erradas`;
+      closeSummary();
+      startQuiz();
+    }
+
+    // ---- PARSE ----
+    function parseGabarito() {
+      const raw = document.getElementById('gabInput').value.toUpperCase().trim();
+      if (!raw) {
+        answerKey = [];
+        document.getElementById('gabPreview').classList.remove('visible');
+        document.getElementById('btnStart').disabled = true;
+        return;
+      }
+
+      let parts = raw.split(/[\s,;\.\-\/\n\r]+/).filter(Boolean);
+      let parsed = [];
+
+      parts.forEach(part => {
+        if (part.length > 1 && /^[A-E]+$/.test(part)) {
+          parsed.push(...part.split(''));
+        } else if (/^[A-E]$/.test(part)) {
+          parsed.push(part);
+        } else if (/^\d+[.\-\)]?\s?[A-E]$/.test(part)) {
+          parsed.push(part.slice(-1));
+        }
+      });
+
+      answerKey = parsed;
+
+      const preview = document.getElementById('gabPreview');
+      preview.innerHTML = '';
+      if (parsed.length > 0) {
+        parsed.forEach((letter, i) => {
+          const chip = document.createElement('span');
+          chip.className = 'gab-chip';
+          chip.innerHTML = `<span class="gab-num">${i + 1}.</span>${letter}`;
+          preview.appendChild(chip);
+        });
+        preview.classList.add('visible');
+        document.getElementById('btnStart').disabled = false;
+      } else {
+        preview.classList.remove('visible');
+        document.getElementById('btnStart').disabled = true;
+      }
+    }
+
+    // ---- TIMER ----
+    function startTimer() {
+      startTime = Date.now();
+      elapsedSeconds = 0;
+      const timerBar = document.getElementById('timerBar');
+      const timerLabel = document.querySelector('.timer-label');
+      timerBar.classList.add('visible');
+
+      if (enemMode) {
+        remainingSeconds = ENEM_TIMES[selectedDay];
+        timerBar.classList.add('timer-countdown');
+        timerLabel.textContent = 'tempo restante';
+        timerInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+      } else {
+        timerBar.classList.remove('timer-countdown', 'warning');
+        timerLabel.textContent = 'tempo decorrido';
+        timerInterval = setInterval(() => {
+          elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+          document.getElementById('timerValue').textContent = formatTime(elapsedSeconds);
+        }, 1000);
+      }
+    }
+
+    function updateCountdown() {
+      remainingSeconds--;
       elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-      document.getElementById('timerValue').textContent = formatTime(elapsedSeconds);
-    }, 1000);
-  }
-
-  function stopTimer() {
-    clearInterval(timerInterval);
-  }
-
-  function formatTime(s) {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-  }
-
-  function formatTimeShort(s) {
-    if (s < 60) return `${s}s`;
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return sec > 0 ? `${m}m${sec}s` : `${m}m`;
-  }
-
-  // ---- LOCAL STORAGE / HISTÓRICO ----
-  function getSavedResults() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [];
-      const arr = JSON.parse(raw);
-      return Array.isArray(arr) ? arr : [];
-    } catch {
-      return [];
-    }
-  }
-
-  function saveResultToStorage(result) {
-    const list = getSavedResults();
-    list.unshift(result);
-    if (list.length > MAX_RESULTS) list.length = MAX_RESULTS;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-  }
-
-  function formatHistoryDate(iso) {
-    const d = new Date(iso);
-    const now = new Date();
-    const diff = now - d;
-    if (diff < 60000) return 'Agora';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)} min atrás`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h atrás`;
-    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
-  }
-
-  function loadHistoryPreview() {
-    const results = getSavedResults();
-    const empty = document.getElementById('historyEmpty');
-    const preview = document.getElementById('historyPreview');
-    const actions = document.getElementById('historyActions');
-
-    if (results.length === 0) {
-      empty.style.display = 'block';
-      preview.style.display = 'none';
-      actions.style.display = 'none';
-      return;
+      document.getElementById('timerValue').textContent = formatTimeHours(remainingSeconds);
+      const timerBar = document.getElementById('timerBar');
+      if (remainingSeconds <= 15 * 60) timerBar.classList.add('warning');
+      const alerts = [60 * 60, 30 * 60, 15 * 60, 5 * 60];
+      if (alerts.includes(remainingSeconds)) {
+        const mins = remainingSeconds / 60;
+        showToast(`⚠️ Faltam ${mins} minutos!`);
+      }
+      if (remainingSeconds <= 0) stopTimer();
     }
 
-    empty.style.display = 'none';
-    preview.style.display = 'flex';
-    actions.style.display = 'flex';
-    preview.innerHTML = '';
+    function formatTimeHours(s) {
+      if (s < 0) s = 0;
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = s % 60;
+      if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+      return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+    }
 
-    const toShow = results.slice(0, 5);
-    toShow.forEach(r => {
-      const item = document.createElement('div');
-      item.className = 'history-item';
-      item.onclick = openHistoryModal;
-      const scoreClass = r.pct >= 70 ? 'good' : r.pct >= 50 ? 'ok' : 'bad';
-      item.innerHTML = `
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+    }
+
+    function formatTimeShort(s) {
+      if (s < 60) return `${s}s`;
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return sec > 0 ? `${m}m${sec}s` : `${m}m`;
+    }
+
+    // ---- LOCAL STORAGE / HISTÓRICO ----
+    function getSavedResults() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveResultToStorage(result) {
+      const list = getSavedResults();
+      list.unshift(result);
+      if (list.length > MAX_RESULTS) list.length = MAX_RESULTS;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    }
+
+    function formatHistoryDate(iso) {
+      const d = new Date(iso);
+      const now = new Date();
+      const diff = now - d;
+      if (diff < 60000) return 'Agora';
+      if (diff < 3600000) return `${Math.floor(diff / 60000)} min atrás`;
+      if (diff < 86400000) return `${Math.floor(diff / 3600000)}h atrás`;
+      return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function loadHistoryPreview() {
+      const results = getSavedResults();
+      const empty = document.getElementById('historyEmpty');
+      const preview = document.getElementById('historyPreview');
+      const actions = document.getElementById('historyActions');
+
+      if (results.length === 0) {
+        empty.style.display = 'block';
+        preview.style.display = 'none';
+        actions.style.display = 'none';
+        return;
+      }
+
+      empty.style.display = 'none';
+      preview.style.display = 'flex';
+      actions.style.display = 'flex';
+      preview.innerHTML = '';
+
+      const toShow = results.slice(0, 5);
+      toShow.forEach(r => {
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.onclick = openHistoryModal;
+        const scoreClass = r.pct >= 70 ? 'good' : r.pct >= 50 ? 'ok' : 'bad';
+        item.innerHTML = `
         <div class="hi-info">
           <div class="hi-name">${r.examName || 'Prova sem nome'}</div>
           <div class="hi-meta">${formatHistoryDate(r.date)} · ${formatTimeShort(r.timeSeconds)}</div>
         </div>
         <span class="hi-score ${scoreClass}">${r.pct}%</span>
       `;
-      preview.appendChild(item);
-    });
-  }
+        preview.appendChild(item);
+      });
+    }
 
-  function openHistoryModal() {
-    const results = getSavedResults();
-    const container = document.getElementById('historyFullList');
-    container.innerHTML = '';
+    function openHistoryModal() {
+      const results = getSavedResults();
+      const container = document.getElementById('historyFullList');
+      container.innerHTML = '';
 
-    if (results.length === 0) {
-      container.innerHTML = '<div class="history-empty">Nenhum resultado salvo ainda</div>';
-    } else {
-      const bestPct = Math.max(...results.map(r => r.pct));
-      results.forEach((r, i) => {
-        const prev = results[i + 1];
-        const isBest = r.pct === bestPct && r.pct > 0;
-        const improved = prev && r.pct > prev.pct;
-        let badge = '';
-        if (isBest && results.length > 1) badge = '🏆 Sua melhor!';
-        else if (improved) badge = `📈 +${r.pct - prev.pct}% em relação à anterior`;
+      if (results.length === 0) {
+        container.innerHTML = '<div class="history-empty">Nenhum resultado salvo ainda</div>';
+      } else {
+        const bestPct = Math.max(...results.map(r => r.pct));
+        results.forEach((r, i) => {
+          const prev = results[i + 1];
+          const isBest = r.pct === bestPct && r.pct > 0;
+          const improved = prev && r.pct > prev.pct;
+          let badge = '';
+          if (isBest && results.length > 1) badge = '🏆 Sua melhor!';
+          else if (improved) badge = `📈 +${r.pct - prev.pct}% em relação à anterior`;
 
-        const item = document.createElement('div');
-        item.className = 'history-full-item' + (isBest ? ' best' : improved ? ' improved' : '');
-        item.innerHTML = `
+          const item = document.createElement('div');
+          item.className = 'history-full-item' + (isBest ? ' best' : improved ? ' improved' : '');
+
+          // Badge de cor para ENEM
+          let colorBadge = '';
+          if (r.mode === 'enem' && r.color) {
+            const colorNames = { azul: 'Azul', amarelo: 'Amarelo', verde: 'Verde', cinza: 'Cinza', branco: 'Branco' };
+            colorBadge = `<span class="color-badge ${r.color}"><span class="color-dot ${r.color}"></span>${colorNames[r.color]}</span>`;
+          }
+
+          // Subject breakdown bars para ENEM
+          let subjectBars = '';
+          if (r.mode === 'enem' && r.subjects) {
+            const subjectEntries = Object.entries(r.subjects);
+            subjectBars = '<div class="subject-bars">';
+            subjectEntries.forEach(([name, data]) => {
+              const statusClass = data.pct >= 70 ? 'good' : data.pct >= 50 ? 'ok' : 'bad';
+              subjectBars += `
+                <div class="subject-bar">
+                  <span class="sb-name">${name}</span>
+                  <div class="sb-track"><div class="sb-fill ${statusClass}" style="width: ${data.pct}%"></div></div>
+                  <span class="sb-pct">${data.pct}%</span>
+                </div>`;
+            });
+            subjectBars += '</div>';
+          }
+
+          item.innerHTML = `
           <div class="hfi-row">
-            <span class="hfi-name">${r.examName || 'Prova sem nome'}</span>
+            <span class="hfi-name">${r.examName || 'Prova sem nome'} ${colorBadge}</span>
             <span class="hfi-date">${formatHistoryDate(r.date)}</span>
           </div>
           <div class="hfi-stats">${r.correct}/${r.total} acertos · ${formatTimeShort(r.timeSeconds)}</div>
+          ${subjectBars}
           ${badge ? `<div class="hfi-badge ${isBest ? 'best' : 'improved'}">${badge}</div>` : ''}
         `;
-        container.appendChild(item);
-      });
-    }
-
-    document.getElementById('historyOverlay').classList.add('visible');
-  }
-
-  function closeHistoryModal() {
-    document.getElementById('historyOverlay').classList.remove('visible');
-  }
-
-  function clearHistory() {
-    if (confirm('Limpar todo o histórico? Não tem como desfazer.')) {
-      localStorage.removeItem(STORAGE_KEY);
-      loadHistoryPreview();
-      closeHistoryModal();
-      showToast('Histórico limpo');
-    }
-  }
-
-  // ---- START ----
-  function startQuiz() {
-    if (answerKey.length === 0) return;
-
-    const usedLetters = new Set(answerKey);
-    let maxOpt = 4;
-    if (usedLetters.has('E')) maxOpt = 5;
-
-    answered = {};
-    results = [];
-    correctCount = 0;
-    wrongCount = 0;
-
-    const container = document.getElementById('questionsContainer');
-    container.innerHTML = '';
-
-    answerKey.forEach((correctLetter, i) => {
-      const qNum = i + 1;
-      const card = document.createElement('div');
-      card.className = 'question-card';
-      card.id = `qcard-${qNum}`;
-
-      const header = document.createElement('div');
-      header.className = 'q-header';
-
-      const numEl = document.createElement('span');
-      numEl.className = 'q-number';
-      numEl.textContent = `Questão ${qNum}`;
-
-      const feedback = document.createElement('span');
-      feedback.className = 'q-feedback';
-      feedback.id = `feedback-${qNum}`;
-
-      header.appendChild(numEl);
-      header.appendChild(feedback);
-
-      const options = document.createElement('div');
-      options.className = 'q-options';
-
-      for (let j = 0; j < maxOpt; j++) {
-        const btn = document.createElement('button');
-        btn.className = 'q-opt';
-        btn.textContent = letters[j];
-        btn.id = `opt-${qNum}-${letters[j]}`;
-        btn.onclick = () => selectAnswer(qNum, letters[j], correctLetter);
-        options.appendChild(btn);
+          container.appendChild(item);
+        });
       }
 
-      card.appendChild(header);
-      card.appendChild(options);
-      container.appendChild(card);
-    });
-
-    document.getElementById('step1').style.display = 'none';
-    document.getElementById('quizSection').classList.add('visible');
-    document.getElementById('scoreboard').classList.add('visible');
-    document.getElementById('resetSection').classList.add('visible');
-    updateScoreboard();
-    startTimer();
-  }
-
-  // ---- SELECT ----
-  function selectAnswer(qNum, chosen, correct) {
-    if (answered[qNum]) return;
-    answered[qNum] = chosen;
-
-    const card = document.getElementById(`qcard-${qNum}`);
-    const feedback = document.getElementById(`feedback-${qNum}`);
-    const chosenBtn = document.getElementById(`opt-${qNum}-${chosen}`);
-    const correctBtn = document.getElementById(`opt-${qNum}-${correct}`);
-
-    card.querySelectorAll('.q-opt').forEach(b => b.classList.add('locked'));
-
-    let status;
-    if (chosen === correct) {
-      correctCount++;
-      chosenBtn.classList.add('selected-correct');
-      card.classList.add('answered-correct');
-      feedback.textContent = '✓ Acertou!';
-      feedback.className = 'q-feedback show correct';
-      status = 'correct';
-    } else {
-      wrongCount++;
-      chosenBtn.classList.add('selected-wrong');
-      correctBtn.classList.add('reveal-correct');
-      card.classList.add('answered-wrong');
-      feedback.textContent = `✗ Resposta: ${correct}`;
-      feedback.className = 'q-feedback show wrong';
-      status = 'wrong';
+      document.getElementById('historyOverlay').classList.add('visible');
     }
 
-    results.push({ q: qNum, chosen, correct, status });
-    updateScoreboard();
-
-    // Check if all answered
-    if (correctCount + wrongCount === answerKey.length) {
-      stopTimer();
-      setTimeout(showSummary, 600);
-    }
-  }
-
-  // ---- SCOREBOARD ----
-  function updateScoreboard() {
-    const total = answerKey.length;
-    const remaining = total - correctCount - wrongCount;
-    const answeredCount = correctCount + wrongCount;
-    const pct = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
-
-    document.getElementById('sCorrect').textContent = correctCount;
-    document.getElementById('sWrong').textContent = wrongCount;
-    document.getElementById('sRemaining').textContent = remaining;
-
-    const circumference = 138.23;
-    const progress = total > 0 ? answeredCount / total : 0;
-    const offset = circumference * (1 - progress);
-    const ring = document.getElementById('ringFill');
-    ring.style.strokeDashoffset = offset;
-
-    if (answeredCount === 0) ring.style.stroke = 'var(--border)';
-    else if (pct >= 70) ring.style.stroke = 'var(--green)';
-    else if (pct >= 40) ring.style.stroke = '#F9A825';
-    else ring.style.stroke = 'var(--red)';
-
-    document.getElementById('ringPct').textContent = answeredCount > 0 ? `${pct}%` : '—';
-  }
-
-  // ---- SUMMARY ----
-  function showSummary() {
-    const total = answerKey.length;
-    const blanks = total - correctCount - wrongCount;
-    const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
-
-    // Exam name
-    const examName = document.getElementById('examName').value.trim();
-    document.getElementById('summaryExamName').textContent = examName || '';
-
-    // Percentage & message
-    document.getElementById('sumPct').innerHTML = `${pct}<span class="pct-sign">%</span>`;
-
-    const bigScore = document.getElementById('bigScore');
-    bigScore.className = 'big-score';
-    if (pct >= 80) {
-      bigScore.classList.add('score-great');
-      document.getElementById('sumMessage').textContent = getMsg('great');
-    } else if (pct >= 50) {
-      bigScore.classList.add('score-ok');
-      document.getElementById('sumMessage').textContent = getMsg('ok');
-    } else {
-      bigScore.classList.add('score-bad');
-      document.getElementById('sumMessage').textContent = getMsg('bad');
+    function closeHistoryModal() {
+      document.getElementById('historyOverlay').classList.remove('visible');
     }
 
-    // Stats
-    document.getElementById('sumCorrect').textContent = correctCount;
-    document.getElementById('sumWrong').textContent = wrongCount;
-    document.getElementById('sumTime').textContent = formatTimeShort(elapsedSeconds);
+    function clearHistory() {
+      if (confirm('Limpar todo o histórico? Não tem como desfazer.')) {
+        localStorage.removeItem(STORAGE_KEY);
+        loadHistoryPreview();
+        closeHistoryModal();
+        showToast('Histórico limpo');
+      }
+    }
 
-    // Bar
-    const cPct = (correctCount / total) * 100;
-    const wPct = (wrongCount / total) * 100;
-    document.getElementById('barCorrect').style.width = `${cPct}%`;
-    document.getElementById('barCorrect').textContent = cPct > 12 ? `${correctCount}` : '';
-    document.getElementById('barWrong').style.width = `${wPct}%`;
-    document.getElementById('barWrong').textContent = wPct > 12 ? `${wrongCount}` : '';
+    // ---- START ----
+    function startQuiz() {
+      if (answerKey.length === 0) return;
 
-    // Review list
-    buildReviewList('all');
+      const usedLetters = new Set(answerKey);
+      let maxOpt = 4;
+      if (usedLetters.has('E')) maxOpt = 5;
 
-    // Salvar no histórico
-    saveResultToStorage({
-      id: Date.now(),
-      date: new Date().toISOString(),
-      examName: examName || '',
-      total,
-      correct: correctCount,
-      wrong: wrongCount,
-      blanks,
-      pct,
-      timeSeconds: elapsedSeconds
-    });
+      answered = {};
+      results = [];
+      correctCount = 0;
+      wrongCount = 0;
 
-    // Show
-    document.getElementById('summaryOverlay').classList.add('visible');
-    document.getElementById('scoreboard').classList.remove('visible');
+      const container = document.getElementById('questionsContainer');
+      container.innerHTML = '';
 
-    // Confetti if good
-    if (pct >= 70) spawnConfetti();
-  }
+      answerKey.forEach((correctLetter, i) => {
+        const qNum = i + 1;
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `qcard-${qNum}`;
 
-  function getMsg(tier) {
-    const msgs = {
-      great: [
-        'Arrasou, Tete! 🔥',
-        'Momo, você é incrível! 💪',
-        'Minha princesa mandou muito! 👑',
-        'Tá voando, Diva! ✈️',
-        'Gabaritando, amor! 🎯',
-        'Ninguém te segura! 🌟',
-        'amOOOOO! 💕',
-        'Tu é show, Fofuxa! ⭐',
-        'Cê arrasa demais, princesa! ✨'
-      ],
-      ok: [
-        'Tá no caminho, Tete! 📈',
-        'Bom progresso, Momo! 💫',
-        'Quase lá, minha princesa! 🚀',
-        'VAMO PORRA! 💪',
-        'Cada dia você melhora mais! 🌱',
-        'Vai dar certo, amor! 💛',
-        'MOMO, você consegue! 🔥',
-        'Bora que você chega lá! 📚'
-      ],
-      bad: [
-        'Não desanima, momo! Te amo! 💛',
-        'Revisão é tudo, Momo. Você consegue! 📚',
-        'Cada erro te aproxima do acerto, princesa! 🌱',
-        'Bora estudar mais, minha tete! Cê vai arrasar! 📖',
-        'Errar faz parte. O importante é não desistir, amor! 💪',
-        'Eu acredito em você, tete! 💕',
-        'Calma, Momo. Uma hora entra rsrs! 🌟',
-        'Princesa, você é capaz de tudo! Não para! ✨'
-      ]
-    };
-    const arr = msgs[tier];
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
+        const header = document.createElement('div');
+        header.className = 'q-header';
 
-  function buildReviewList(filter) {
-    const list = document.getElementById('reviewList');
-    list.innerHTML = '';
+        const numEl = document.createElement('span');
+        numEl.className = 'q-number';
+        numEl.textContent = `Questão ${qNum}`;
 
-    // Build full list: answered + blanks
-    for (let i = 1; i <= answerKey.length; i++) {
-      const r = results.find(x => x.q === i);
-      const status = r ? r.status : 'blank';
-      const chosen = r ? r.chosen : '—';
-      const correct = answerKey[i - 1];
+        const feedback = document.createElement('span');
+        feedback.className = 'q-feedback';
+        feedback.id = `feedback-${qNum}`;
 
-      if (filter !== 'all' && filter !== status) continue;
+        header.appendChild(numEl);
+        header.appendChild(feedback);
 
-      const item = document.createElement('div');
-      item.className = `review-item ri-${status}`;
+        const options = document.createElement('div');
+        options.className = 'q-options';
 
-      const num = document.createElement('span');
-      num.className = 'ri-num';
-      num.textContent = i;
+        for (let j = 0; j < maxOpt; j++) {
+          const btn = document.createElement('button');
+          btn.className = 'q-opt';
+          btn.textContent = letters[j];
+          btn.id = `opt-${qNum}-${letters[j]}`;
+          btn.onclick = () => selectAnswer(qNum, letters[j], correctLetter);
+          options.appendChild(btn);
+        }
 
-      const detail = document.createElement('span');
-      detail.className = 'ri-detail';
+        card.appendChild(header);
+        card.appendChild(options);
+        container.appendChild(card);
+      });
 
-      if (status === 'correct') {
-        detail.textContent = `Marcou ${chosen} ✓`;
-      } else if (status === 'wrong') {
-        detail.textContent = `Marcou ${chosen} → certa: ${correct}`;
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('quizSection').classList.add('visible');
+      document.getElementById('scoreboard').classList.add('visible');
+      document.getElementById('resetSection').classList.add('visible');
+      updateScoreboard();
+      startTimer();
+    }
+
+    // ---- SELECT ----
+    function selectAnswer(qNum, chosen, correct) {
+      if (answered[qNum]) return;
+      answered[qNum] = chosen;
+
+      const card = document.getElementById(`qcard-${qNum}`);
+      const feedback = document.getElementById(`feedback-${qNum}`);
+      const chosenBtn = document.getElementById(`opt-${qNum}-${chosen}`);
+      const correctBtn = document.getElementById(`opt-${qNum}-${correct}`);
+
+      card.querySelectorAll('.q-opt').forEach(b => b.classList.add('locked'));
+
+      let status;
+      if (chosen === correct) {
+        correctCount++;
+        chosenBtn.classList.add('selected-correct');
+        card.classList.add('answered-correct');
+        feedback.textContent = '✓ Acertou!';
+        feedback.className = 'q-feedback show correct';
+        status = 'correct';
       } else {
-        detail.textContent = `Não respondeu → certa: ${correct}`;
+        wrongCount++;
+        chosenBtn.classList.add('selected-wrong');
+        correctBtn.classList.add('reveal-correct');
+        card.classList.add('answered-wrong');
+        feedback.textContent = `✗ Resposta: ${correct}`;
+        feedback.className = 'q-feedback show wrong';
+        status = 'wrong';
       }
 
-      const badge = document.createElement('span');
-      badge.className = 'ri-badge';
-      badge.textContent = status === 'correct' ? '✓' : status === 'wrong' ? '✗' : '—';
+      results.push({ q: qNum, chosen, correct, status });
+      updateScoreboard();
 
-      item.appendChild(num);
-      item.appendChild(detail);
-      item.appendChild(badge);
-      list.appendChild(item);
+      // Check if all answered
+      if (correctCount + wrongCount === answerKey.length) {
+        stopTimer();
+        setTimeout(showSummary, 600);
+      }
     }
-  }
 
-  function filterReview(filter, btn) {
-    document.querySelectorAll('.review-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    buildReviewList(filter);
-  }
+    // ---- SCOREBOARD ----
+    function updateScoreboard() {
+      const total = answerKey.length;
+      const remaining = total - correctCount - wrongCount;
+      const answeredCount = correctCount + wrongCount;
+      const pct = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
 
-  function closeSummary() {
-    document.getElementById('summaryOverlay').classList.remove('visible');
-  }
+      document.getElementById('sCorrect').textContent = correctCount;
+      document.getElementById('sWrong').textContent = wrongCount;
+      document.getElementById('sRemaining').textContent = remaining;
 
-  // ---- COPY ----
-  function copyResults() {
-    const examName = document.getElementById('examName').value.trim();
-    const total = answerKey.length;
-    const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+      const circumference = 138.23;
+      const progress = total > 0 ? answeredCount / total : 0;
+      const offset = circumference * (1 - progress);
+      const ring = document.getElementById('ringFill');
+      ring.style.strokeDashoffset = offset;
 
-    let text = `📊 Confere Gabarito\n`;
-    if (examName) text += `📝 ${examName}\n`;
-    text += `\n`;
-    text += `✅ Acertos: ${correctCount}/${total} (${pct}%)\n`;
-    text += `❌ Erros: ${wrongCount}\n`;
-    text += `⏱ Tempo: ${formatTimeShort(elapsedSeconds)}\n`;
+      if (answeredCount === 0) ring.style.stroke = 'var(--border)';
+      else if (pct >= 70) ring.style.stroke = 'var(--green)';
+      else if (pct >= 40) ring.style.stroke = '#F9A825';
+      else ring.style.stroke = 'var(--red)';
 
-    const wrongOnes = results.filter(r => r.status === 'wrong');
-    if (wrongOnes.length > 0) {
-      text += `\n❌ Questões erradas:\n`;
-      wrongOnes.forEach(r => {
-        text += `  ${r.q}. Marcou ${r.chosen} → Certa: ${r.correct}\n`;
+      document.getElementById('ringPct').textContent = answeredCount > 0 ? `${pct}%` : '—';
+    }
+
+    // ---- SUMMARY ----
+    function showSummary() {
+      const total = answerKey.length;
+      const blanks = total - correctCount - wrongCount;
+      const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+      // Exam name
+      const examName = document.getElementById('examName').value.trim();
+      document.getElementById('summaryExamName').textContent = examName || '';
+
+      // Percentage & message
+      document.getElementById('sumPct').innerHTML = `${pct}<span class="pct-sign">%</span>`;
+
+      const bigScore = document.getElementById('bigScore');
+      bigScore.className = 'big-score';
+      if (pct >= 80) {
+        bigScore.classList.add('score-great');
+        document.getElementById('sumMessage').textContent = getMsg('great');
+      } else if (pct >= 50) {
+        bigScore.classList.add('score-ok');
+        document.getElementById('sumMessage').textContent = getMsg('ok');
+      } else {
+        bigScore.classList.add('score-bad');
+        document.getElementById('sumMessage').textContent = getMsg('bad');
+      }
+
+      // Stats
+      document.getElementById('sumCorrect').textContent = correctCount;
+      document.getElementById('sumWrong').textContent = wrongCount;
+      document.getElementById('sumTime').textContent = formatTimeShort(elapsedSeconds);
+
+      // Bar
+      const cPct = (correctCount / total) * 100;
+      const wPct = (wrongCount / total) * 100;
+      document.getElementById('barCorrect').style.width = `${cPct}%`;
+      document.getElementById('barCorrect').textContent = cPct > 12 ? `${correctCount}` : '';
+      document.getElementById('barWrong').style.width = `${wPct}%`;
+      document.getElementById('barWrong').textContent = wPct > 12 ? `${wrongCount}` : '';
+
+      // ENEM Mode: Show TRI, Areas, Suggestions
+      const triSection = document.getElementById('triSection');
+      const areaBreakdown = document.getElementById('areaBreakdown');
+      const suggestionsSection = document.getElementById('suggestionsSection');
+      const btnRetryWrong = document.getElementById('btnRetryWrong');
+
+      if (enemMode && total >= 10) {
+        // Partial data warning
+        if (total < 90) {
+          const warning = document.createElement('div');
+          warning.className = 'partial-data-warning';
+          warning.innerHTML = `⚠️ <strong>Dados Incompletos:</strong> Este relatório é baseado em ${total}/90 questões. A estimativa de TRI e o desempenho por área podem ser menos precisos.`;
+          triSection.parentNode.insertBefore(warning, triSection);
+        }
+
+        // TRI Estimation
+        const tri = estimateTRI(correctCount, total);
+        document.getElementById('triScore').textContent = `${tri.low} - ${tri.high}`;
+        triSection.style.display = 'block';
+
+        // Area Breakdown
+        const areaPerf = getAreaPerformance();
+        const areaCards = document.getElementById('areaCards');
+        areaCards.innerHTML = '';
+        areaPerf.forEach(a => {
+          const statusClass = a.pct >= 70 ? 'good' : a.pct >= 50 ? 'ok' : 'bad';
+          const card = document.createElement('div');
+          card.className = `area-card ${statusClass}`;
+          card.innerHTML = `
+            <span class="area-emoji">${a.emoji}</span>
+            <div class="area-info">
+              <div class="area-name">${a.name}</div>
+              <div class="area-stats">${a.correct}/${a.total} acertos</div>
+            </div>
+            <span class="area-pct">${a.pct}%</span>
+          `;
+          areaCards.appendChild(card);
+        });
+        areaBreakdown.style.display = 'block';
+
+        // Suggestions
+        const suggestions = generateSuggestions(areaPerf);
+        const suggestionsList = document.getElementById('suggestionsList');
+        suggestionsList.innerHTML = suggestions.map(s => `<li>${s}</li>`).join('');
+        suggestionsSection.style.display = 'block';
+      } else {
+        triSection.style.display = 'none';
+        areaBreakdown.style.display = 'none';
+        suggestionsSection.style.display = 'none';
+      }
+
+      // Show retry button if there are wrong answers
+      btnRetryWrong.style.display = wrongCount > 0 ? 'block' : 'none';
+
+      // Review list
+      buildReviewList('all');
+
+      // Salvar no histórico
+      const resultData = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        examName: examName || '',
+        total,
+        correct: correctCount,
+        wrong: wrongCount,
+        blanks,
+        pct,
+        timeSeconds: elapsedSeconds
+      };
+
+      // Adicionar dados específicos do ENEM
+      if (enemMode && total >= 10) {
+        resultData.mode = 'enem';
+        resultData.day = selectedDay;
+        resultData.color = selectedColor;
+        if (selectedDay === 'dia1') {
+          resultData.language = selectedLanguage;
+        }
+        // Breakdown por matéria
+        const areaPerf = getAreaPerformance();
+        resultData.subjects = {};
+        areaPerf.forEach(a => {
+          resultData.subjects[a.name] = {
+            correct: a.correct,
+            total: a.total,
+            pct: a.pct
+          };
+        });
+      }
+
+      saveResultToStorage(resultData);
+
+      // Show
+      document.getElementById('summaryOverlay').classList.add('visible');
+      document.getElementById('scoreboard').classList.remove('visible');
+
+      // Confetti if good
+      if (pct >= 70) spawnConfetti();
+    }
+
+    function getMsg(tier) {
+      const msgs = {
+        great: [
+          'Arrasou, Tete! 🔥',
+          'Momo, você é incrível! 💪',
+          'Minha princesa mandou muito! 👑',
+          'Tá voando, Diva! ✈️',
+          'Gabaritando, amor! 🎯',
+          'Ninguém te segura! 🌟',
+          'amOOOOO! 💕',
+          'Tu é show, Fofuxa! ⭐',
+          'Cê arrasa demais, princesa! ✨'
+        ],
+        ok: [
+          'Tá no caminho, Tete! 📈',
+          'Bom progresso, Momo! 💫',
+          'Quase lá, minha princesa! 🚀',
+          'VAMO PORRA! 💪',
+          'Cada dia você melhora mais! 🌱',
+          'Vai dar certo, amor! 💛',
+          'MOMO, você consegue! 🔥',
+          'Bora que você chega lá! 📚'
+        ],
+        bad: [
+          'Não desanima, momo! Te amo! 💛',
+          'Revisão é tudo, Momo. Você consegue! 📚',
+          'Cada erro te aproxima do acerto, princesa! 🌱',
+          'Bora estudar mais, minha tete! Cê vai arrasar! 📖',
+          'Errar faz parte. O importante é não desistir, amor! 💪',
+          'Eu acredito em você, tete! 💕',
+          'Calma, Momo. Uma hora entra rsrs! 🌟',
+          'Princesa, você é capaz de tudo! Não para! ✨'
+        ]
+      };
+      const arr = msgs[tier];
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function buildReviewList(filter) {
+      const list = document.getElementById('reviewList');
+      list.innerHTML = '';
+
+      // Build full list: answered + blanks
+      for (let i = 1; i <= answerKey.length; i++) {
+        const r = results.find(x => x.q === i);
+        const status = r ? r.status : 'blank';
+        const chosen = r ? r.chosen : '—';
+        const correct = answerKey[i - 1];
+
+        if (filter !== 'all' && filter !== status) continue;
+
+        const item = document.createElement('div');
+        item.className = `review-item ri-${status}`;
+
+        const num = document.createElement('span');
+        num.className = 'ri-num';
+        num.textContent = i;
+
+        const detail = document.createElement('span');
+        detail.className = 'ri-detail';
+
+        if (status === 'correct') {
+          detail.textContent = `Marcou ${chosen} ✓`;
+        } else if (status === 'wrong') {
+          detail.textContent = `Marcou ${chosen} → certa: ${correct}`;
+        } else {
+          detail.textContent = `Não respondeu → certa: ${correct}`;
+        }
+
+        const badge = document.createElement('span');
+        badge.className = 'ri-badge';
+        badge.textContent = status === 'correct' ? '✓' : status === 'wrong' ? '✗' : '—';
+
+        item.appendChild(num);
+        item.appendChild(detail);
+        item.appendChild(badge);
+        list.appendChild(item);
+      }
+    }
+
+    function filterReview(filter, btn) {
+      document.querySelectorAll('.review-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      buildReviewList(filter);
+    }
+
+    function closeSummary() {
+      document.getElementById('summaryOverlay').classList.remove('visible');
+    }
+
+    // ---- COPY ----
+    function copyResults() {
+      const examName = document.getElementById('examName').value.trim();
+      const total = answerKey.length;
+      const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+      let text = `📊 Confere Gabarito\n`;
+      if (examName) text += `📝 ${examName}\n`;
+      text += `\n`;
+      text += `✅ Acertos: ${correctCount}/${total} (${pct}%)\n`;
+      text += `❌ Erros: ${wrongCount}\n`;
+      text += `⏱ Tempo: ${formatTimeShort(elapsedSeconds)}\n`;
+
+      const wrongOnes = results.filter(r => r.status === 'wrong');
+      if (wrongOnes.length > 0) {
+        text += `\n❌ Questões erradas:\n`;
+        wrongOnes.forEach(r => {
+          text += `  ${r.q}. Marcou ${r.chosen} → Certa: ${r.correct}\n`;
+        });
+      }
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Resultado copiado!');
+      }).catch(() => {
+        showToast('Erro ao copiar');
       });
     }
 
-    navigator.clipboard.writeText(text).then(() => {
-      showToast('Resultado copiado!');
-    }).catch(() => {
-      showToast('Erro ao copiar');
-    });
-  }
-
-  function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
-  }
-
-  // ---- CONFETTI ----
-  function spawnConfetti() {
-    const colors = ['#4CAF82', '#E8836B', '#6B8DE8', '#F9A825', '#E25C5C', '#9C27B0'];
-    for (let i = 0; i < 50; i++) {
-      const piece = document.createElement('div');
-      piece.className = 'confetti-piece';
-      piece.style.left = `${Math.random() * 100}vw`;
-      piece.style.top = `-10px`;
-      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-      piece.style.animationDelay = `${Math.random() * 1.2}s`;
-      piece.style.animationDuration = `${2 + Math.random() * 1.5}s`;
-      piece.style.width = `${6 + Math.random() * 6}px`;
-      piece.style.height = `${6 + Math.random() * 6}px`;
-      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-      document.body.appendChild(piece);
-      setTimeout(() => piece.remove(), 4000);
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
     }
-  }
 
-  // ---- NAV ----
-  function editGabarito() {
-    stopTimer();
-    document.getElementById('step1').style.display = 'block';
-    document.getElementById('quizSection').classList.remove('visible');
-    document.getElementById('scoreboard').classList.remove('visible');
-    document.getElementById('timerBar').classList.remove('visible');
+    // ---- CONFETTI ----
+    function spawnConfetti() {
+      const colors = ['#4CAF82', '#E8836B', '#6B8DE8', '#F9A825', '#E25C5C', '#9C27B0'];
+      for (let i = 0; i < 50; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.top = `-10px`;
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = `${Math.random() * 1.2}s`;
+        piece.style.animationDuration = `${2 + Math.random() * 1.5}s`;
+        piece.style.width = `${6 + Math.random() * 6}px`;
+        piece.style.height = `${6 + Math.random() * 6}px`;
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 4000);
+      }
+    }
+
+    // ---- NAV ----
+    function editGabarito() {
+      stopTimer();
+      document.getElementById('step1').style.display = 'block';
+      document.getElementById('quizSection').classList.remove('visible');
+      document.getElementById('scoreboard').classList.remove('visible');
+      document.getElementById('timerBar').classList.remove('visible');
+      loadHistoryPreview();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetQuiz() {
+      closeSummary();
+      startQuiz();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Carregar preview do histórico ao abrir a página
     loadHistoryPreview();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 
-  function resetQuiz() {
-    closeSummary();
-    startQuiz();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+    // Verificar se veio da biblioteca com parâmetros para carregar cache
+    (function checkUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      const cacheKey = params.get('loadCache');
+      const day = params.get('day');
 
-  // Carregar preview do histórico ao abrir a página
-  loadHistoryPreview();
-</script>
+      if (cacheKey && day) {
+        // Limpar URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        // Carregar gabarito do cache
+        const cache = getGabaritosFromStorage();
+        if (cache[cacheKey]) {
+          const [year, lang] = cacheKey.split('_');
+          const gabaritoString = cache[cacheKey].data[day];
+
+          if (gabaritoString) {
+            // Ativar modo ENEM
+            selectMode('enem');
+            selectDay(day);
+            selectLanguage(lang || 'ingles');
+
+            const examName = `ENEM ${year} - ${day === 'dia1' ? 'Dia 1' : 'Dia 2'} (${lang === 'ingles' ? 'Inglês' : 'Espanhol'}) [Cache]`;
+            document.getElementById('gabInputEnem').value = gabaritoString;
+            document.getElementById('examNameEnem').value = examName;
+            parseGabaritoEnem();
+
+            setTimeout(() => {
+              showToast(`✓ ${examName} carregado do cache!`);
+            }, 500);
+          }
+        }
+      }
+    })();
+  </script>
 
 </body>
+
 </html>
